@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="buttonStyle" >
+        <item name="android:background">@null</item>
+    </style>
+
+</resources>
