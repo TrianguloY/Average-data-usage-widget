@@ -59,4 +59,13 @@ class Preferences {
     }
 
 
+    private static final String KEY_INFOREQUESTED = "infoRequested";
+    public void infoRequested() {
+        sharedPreferences.edit().putBoolean(KEY_INFOREQUESTED,true).apply();
+    }
+    public boolean isInfoRequested(){
+        boolean b = sharedPreferences.getBoolean(KEY_INFOREQUESTED, false);
+        sharedPreferences.edit().remove(KEY_INFOREQUESTED).apply();
+        return b;
+    }
 }

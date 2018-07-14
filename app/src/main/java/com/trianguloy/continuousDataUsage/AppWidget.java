@@ -15,7 +15,9 @@ import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -28,6 +30,11 @@ public class AppWidget extends AppWidgetProvider {
      * Precision of the progress bars. Bigger number means more 'intermediate steps'
      */
     private static final int PROGRESS_PRECISION = 100;
+
+    private static final String EXTRA_ACTION = "cdu_action";
+    private static final int ACTION_REFRESH = 0;
+    private static final int ACTION_USAGE = 1;
+    private static final int ACTION_INFO = 2;
 
 
     /**
@@ -75,21 +82,42 @@ public class AppWidget extends AppWidgetProvider {
         updateViews(context, views);
 
         //update when clicking
-        Intent intent = new Intent(context, AppWidget.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.wdg_main, pendingIntent);
+        setOnClick(context, new int[]{appWidgetId}, views, new int[]{R.id.wdg_prgBar_data,R.id.wdg_prgBar_date}, ACTION_REFRESH);
+        setOnClick(context, new int[]{appWidgetId}, views, new int[]{R.id.btn_showData}, ACTION_USAGE);
+        setOnClick(context, new int[]{appWidgetId}, views, new int[]{R.id.wdg_txt_data,R.id.wdg_txt_date}, ACTION_INFO);
 
-        //open usage when clicking
-        intent = new Intent(Intent.ACTION_MAIN);
-        intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.btn_showData, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    private static void setOnClick(Context context, int[] appWidgetIds, RemoteViews remoteViews, int[] views, int action) {
+        Intent intent = new Intent(context, AppWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        intent.putExtra(EXTRA_ACTION, action);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, action, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        for (int view : views) {
+            remoteViews.setOnClickPendingIntent(view, pendingIntent);
+        }
+    }
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        switch(intent.getIntExtra(EXTRA_ACTION, -1)){
+            case ACTION_USAGE:
+                Intent settings = new Intent(Intent.ACTION_MAIN);
+                settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
+                settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(settings);
+                break;
+            case ACTION_INFO:
+                new Preferences(context).infoRequested();
+            default:
+                super.onReceive(context, intent);
+                break;
+        }
     }
 
 
@@ -99,12 +127,13 @@ public class AppWidget extends AppWidgetProvider {
      * @param views views to update
      */
     private static void updateViews(Context context, RemoteViews views) {
-
         //variables
         String formatter = "%.2f MB (%.2f%%)";
 
         //get preferences
         Preferences pref = new Preferences(context);
+
+        boolean infoRequested = pref.isInfoRequested();
 
 
         //date
@@ -183,9 +212,51 @@ public class AppWidget extends AppWidgetProvider {
         views.setProgressBar(R.id.wdg_prgBar_data, PROGRESS_PRECISION, dbl2int(percentData * PROGRESS_PRECISION), false);
         views.setTextViewText(R.id.wdg_txt_data, String.format(Locale.getDefault(), formatter, megabytes, percentData * 100));
 
+        //current usage as date
+        if(infoRequested){
+            double millisEquivalent = (endOfPeriod - startOfPeriod) * percentData + startOfPeriod;
+            cal.clear();
+            cal.setTimeInMillis(Math.round(millisEquivalent));
+            Toast.makeText(context, context.getString(R.string.toast_currentUsage,
+                     SimpleDateFormat.getDateTimeInstance().format(cal.getTime()),
+                    millisToInterval(cal.getTimeInMillis()-System.currentTimeMillis())), Toast.LENGTH_LONG).show();
+        }
 
         Log.d("Widget", "updated");
 
+    }
+
+    private static String millisToInterval(long millis) {
+        StringBuilder sb = new StringBuilder();
+        String prefix = millis >= 0 ? "+ " : "- ";
+        millis = millis > 0 ? millis : -millis;
+
+        millis /= 1000;
+
+        sb.insert(0," seconds");
+        sb.insert(0,millis % 60);
+        millis /= 60;
+
+        if(millis > 0) {
+            sb.insert(0, " minutes, ");
+            sb.insert(0, millis % 60);
+            millis /= 60;
+        }
+
+        if(millis>0) {
+            sb.insert(0, " hours, ");
+            sb.insert(0, millis % 24);
+            millis /= 24;
+        }
+
+        if(millis>0){
+            sb.insert(0," days, ");
+            sb.insert(0, millis);
+        }
+
+        sb.insert(0,prefix);
+
+        return sb.toString();
     }
 
 
