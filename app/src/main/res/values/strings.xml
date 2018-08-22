@@ -31,5 +31,6 @@
     <string name="txt_widget_errorQuering">Error querying data</string>
     <string name="txt_widget_errorService">Service unavailable</string>
     <string name="toast_currentUsage">Your current usage correspond to date:\n%s\n(%s)</string>
+    <string name="toast_activityNotFound">Android activity not found.</string>
 
 </resources>

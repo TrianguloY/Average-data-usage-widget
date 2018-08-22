@@ -6,6 +6,7 @@ import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -110,7 +111,11 @@ public class AppWidget extends AppWidgetProvider {
                 Intent settings = new Intent(Intent.ACTION_MAIN);
                 settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                 settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(settings);
+                try {
+                    context.startActivity(settings);
+                }catch (ActivityNotFoundException e){
+                    Toast.makeText(context, R.string.toast_activityNotFound, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case ACTION_INFO:
                 new Preferences(context).infoRequested();
@@ -156,7 +161,7 @@ public class AppWidget extends AppWidgetProvider {
         double percentDate = (System.currentTimeMillis() - startOfPeriod) / (double) (endOfPeriod - startOfPeriod);
         views.setProgressBar(R.id.wdg_prgBar_date, PROGRESS_PRECISION, dbl2int(percentDate * PROGRESS_PRECISION), false);
         double totalData = pref.getTotalData();
-        views.setTextViewText(R.id.wdg_txt_date, String.format(Locale.getDefault(), formatter, percentDate * totalData, percentDate * 100));
+        views.setTextViewText(R.id.wdg_txt_date, String.format(Locale.US, formatter, percentDate * totalData, percentDate * 100));
 
         //check permission
         if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -210,7 +215,7 @@ public class AppWidget extends AppWidgetProvider {
         double megabytes = (bucket.getRxBytes() + bucket.getTxBytes()) * bytesConversion;
         double percentData = megabytes / totalData;
         views.setProgressBar(R.id.wdg_prgBar_data, PROGRESS_PRECISION, dbl2int(percentData * PROGRESS_PRECISION), false);
-        views.setTextViewText(R.id.wdg_txt_data, String.format(Locale.getDefault(), formatter, megabytes, percentData * 100));
+        views.setTextViewText(R.id.wdg_txt_data, String.format(Locale.US, formatter, megabytes, percentData * 100));
 
         //current usage as date
         if(infoRequested){

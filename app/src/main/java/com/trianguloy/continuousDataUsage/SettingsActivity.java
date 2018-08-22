@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -57,7 +59,7 @@ public class SettingsActivity extends Activity {
 
         //totaldata
         final EditText view_totalData = findViewById(R.id.stt_edTxt_totalData);
-        view_totalData.setText(String.format(Locale.getDefault(), "%s", pref.getTotalData()));
+        view_totalData.setText(String.format(Locale.US, "%s", pref.getTotalData()));
         view_totalData.setHint(view_totalData.getText());
         view_totalData.addTextChangedListener(new TextWatcher() {
             @Override
@@ -71,14 +73,15 @@ public class SettingsActivity extends Activity {
             @Override
             public void afterTextChanged(Editable editable) {
                 try {
-                    float totalData = Float.parseFloat(editable.toString());
+                    float totalData = NumberFormat.getInstance(Locale.US).parse(editable.toString()).floatValue();
                     if (totalData > 0) {
                         //valid total data, save
                         pref.setTotalData(totalData);
-                        view_totalData.setHint(String.format(Locale.getDefault(), "%s", totalData));
+                        view_totalData.setHint(String.format(Locale.US, "%s", totalData));
                     }
-                } catch (NumberFormatException e) {
+                } catch (ParseException e) {
                     Log.d("settings","numberformatexception");
+                    e.printStackTrace();
                 }
             }
         });

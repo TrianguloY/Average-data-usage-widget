@@ -42,7 +42,7 @@ class Preferences {
         return sharedPreferences.getBoolean(KEY_ALTCONVERSION,DEFAULT_ALTCONVERSION);
     }
     void setAltConversion(boolean altConversion){
-        sharedPreferences.edit().putBoolean(KEY_TOTALDATA,altConversion).apply();
+        sharedPreferences.edit().putBoolean(KEY_ALTCONVERSION,altConversion).apply();
     }
 
 
