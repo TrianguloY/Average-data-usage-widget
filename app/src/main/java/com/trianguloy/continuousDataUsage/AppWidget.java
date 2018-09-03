@@ -147,10 +147,16 @@ public class AppWidget extends AppWidgetProvider {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+        
+        //current
+        long currentMillis = System.currentTimeMillis();
 
         // get start of the period
         int firstDay = pref.getFirstDay();
         cal.set(Calendar.DAY_OF_MONTH, firstDay);
+        if(currentMillis < cal.getTimeInMillis()){
+            cal.add(Calendar.MONTH, -1);
+        }
         long startOfPeriod = cal.getTimeInMillis();
 
         //get end of period
@@ -158,7 +164,7 @@ public class AppWidget extends AppWidgetProvider {
         long endOfPeriod = cal.getTimeInMillis();
 
         //upper bar
-        double percentDate = (System.currentTimeMillis() - startOfPeriod) / (double) (endOfPeriod - startOfPeriod);
+        double percentDate = (currentMillis - startOfPeriod) / (double) (endOfPeriod - startOfPeriod);
         views.setProgressBar(R.id.wdg_prgBar_date, PROGRESS_PRECISION, dbl2int(percentDate * PROGRESS_PRECISION), false);
         double totalData = pref.getTotalData();
         views.setTextViewText(R.id.wdg_txt_date, String.format(Locale.US, formatter, percentDate * totalData, percentDate * 100));
@@ -224,7 +230,7 @@ public class AppWidget extends AppWidgetProvider {
             cal.setTimeInMillis(Math.round(millisEquivalent));
             Toast.makeText(context, context.getString(R.string.toast_currentUsage,
                      SimpleDateFormat.getDateTimeInstance().format(cal.getTime()),
-                    millisToInterval(cal.getTimeInMillis()-System.currentTimeMillis())), Toast.LENGTH_LONG).show();
+                    millisToInterval(cal.getTimeInMillis()- currentMillis)), Toast.LENGTH_LONG).show();
         }
 
         Log.d("Widget", "updated");

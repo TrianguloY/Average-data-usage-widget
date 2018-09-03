@@ -88,8 +88,8 @@ public class SettingsActivity extends Activity {
 
         //firstDay
         Spinner view_firstDay = findViewById(R.id.stt_spn_firstDay);
-        final Integer days[] = new Integer[31];
-        for (int i = 0; i < 31; i++) {
+        final Integer days[] = new Integer[28];
+        for (int i = 0; i < 28; i++) {
             days[i] = i + 1;
         }
         view_firstDay.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, days));
