@@ -32,5 +32,7 @@
     <string name="txt_widget_errorService">Service unavailable</string>
     <string name="toast_currentUsage">Your current usage correspond to date:\n%s\n(%s)</string>
     <string name="toast_activityNotFound">Android activity not found.</string>
+    <string name="wdgLabel_progressBars">Progress bars (4x1)</string>
+    <string name="wdgLabel_rate">Rate (1x1)</string>
 
 </resources>
