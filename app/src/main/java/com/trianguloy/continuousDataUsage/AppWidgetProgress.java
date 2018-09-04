@@ -7,7 +7,8 @@ import android.widget.RemoteViews;
 import java.util.Locale;
 
 /**
- * Implementation of App Widget functionality.
+ * Implementation of the Progress Widget functionality.
+ * Displays the values and two progress bar corresponding to the 'average' and 'current' usage.
  */
 public class AppWidgetProgress extends AppWidgetBase {
     

@@ -7,7 +7,8 @@ import android.widget.RemoteViews;
 import java.util.Locale;
 
 /**
- * Implementation of App Widget functionality.
+ * Implementation of the Rate widget functionality.
+ * Displays a number with the rate between used_data / average_data
  */
 public class AppWidgetRate extends AppWidgetBase {
     

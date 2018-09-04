@@ -47,7 +47,7 @@ class Preferences {
 
 
     /**
-     * First day of period (int [1,31])
+     * First day of period (int [1,28])
      */
     private static final String KEY_FIRSTDAY = "firstDay";
     private static final int DEFAULT_FIRSTDAY = 1;
@@ -57,8 +57,10 @@ class Preferences {
     void setFirstDay(int firstDay){
         sharedPreferences.edit().putInt(KEY_FIRSTDAY,firstDay).apply();
     }
-
-
+    
+    /**
+     * Information requested flag. Cleared when read.
+     */
     private static final String KEY_INFOREQUESTED = "infoRequested";
     public void infoRequested() {
         sharedPreferences.edit().putBoolean(KEY_INFOREQUESTED,true).apply();

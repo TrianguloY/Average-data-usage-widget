@@ -26,6 +26,9 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Locale;
 
+/**
+ * Main activity: settings
+ */
 public class SettingsActivity extends Activity {
 
 

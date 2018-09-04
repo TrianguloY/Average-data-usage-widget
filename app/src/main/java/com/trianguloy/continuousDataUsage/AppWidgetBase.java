@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Class that [INSERT DESCRIPTION HERE]
+ * Implementation of App Widget functionality. Base class.
  */
 abstract class AppWidgetBase extends AppWidgetProvider {
     
@@ -76,10 +76,16 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     }
     
     
+    /**
+     * Intent received, act accordingly.
+     * @param context that magical class
+     * @param intent the intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         switch (intent.getIntExtra(EXTRA_ACTION, -1)) {
             case ACTION_USAGE:
+                //open the android usage settings
                 Intent settings = new Intent(Intent.ACTION_MAIN);
                 settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                 settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -90,6 +96,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
                 }
                 break;
             case ACTION_INFO:
+                //info requested, set flag
                 new Preferences(context).infoRequested();
             default:
                 super.onReceive(context, intent);
@@ -97,6 +104,9 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         }
     }
     
+    /**
+     * To return a bundle with multiple values in the #getCommonInfo function
+     */
     static class ReturnedInfo{
         double percentDate = 0;
         double totalData = 0;
@@ -107,6 +117,11 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         double megabytes = 0;
     }
     
+    /**
+     * The core of the widgets, calculates the necessary data
+     * @param context not to be confused with contest
+     * @return calculated data in a packed class
+     */
     ReturnedInfo getCommonInfo(Context context){
         
         ReturnedInfo returnedInfo = new ReturnedInfo();
@@ -218,7 +233,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     
     
     
-    //utils
+    //--------------utils-------------------
     
     
     /**
