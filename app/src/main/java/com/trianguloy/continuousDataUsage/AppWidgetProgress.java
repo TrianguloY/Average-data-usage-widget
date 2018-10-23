@@ -2,7 +2,10 @@ package com.trianguloy.continuousDataUsage;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.graphics.Point;
+import android.view.WindowManager;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -11,6 +14,11 @@ import java.util.Locale;
  * Displays the values and two progress bar corresponding to the 'average' and 'current' usage.
  */
 public class AppWidgetProgress extends AppWidgetBase {
+    
+    /**
+     * Default precision of the progress bars. Bigger number means more 'intermediate steps'
+     */
+    static final int DEFAULT_PROGRESS_PRECISION = 512;
     
     
     /**
@@ -34,6 +42,7 @@ public class AppWidgetProgress extends AppWidgetBase {
         
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+        Toast.makeText(context, "Views refreshed", Toast.LENGTH_SHORT).show();
     }
     
     /**
@@ -47,9 +56,15 @@ public class AppWidgetProgress extends AppWidgetBase {
         
         //variables
         String formatter = "%.2f MB (%.2f%%)";
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Point p = new Point(DEFAULT_PROGRESS_PRECISION,0);
+        if(wm!=null){
+            wm.getDefaultDisplay().getSize(p);
+        }
+        int progressPrecision = p.x;
         
         //top bar
-        views.setProgressBar(R.id.wdg_prgBar_date, PROGRESS_PRECISION, dbl2int(commonInfo.percentDate * PROGRESS_PRECISION), false);
+        views.setProgressBar(R.id.wdg_prgBar_date, progressPrecision, dbl2int(commonInfo.percentDate * progressPrecision), false);
         views.setTextViewText(R.id.wdg_txt_date, String.format(Locale.US, formatter, commonInfo.percentDate * commonInfo.totalData, commonInfo.percentDate * 100));
         
         //error
@@ -59,7 +74,12 @@ public class AppWidgetProgress extends AppWidgetBase {
         }
         
         //bottom bar
-        views.setProgressBar(R.id.wdg_prgBar_data, PROGRESS_PRECISION, dbl2int(commonInfo.percentData * PROGRESS_PRECISION), false);
+        if (commonInfo.percentData <= 1) {
+            views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, dbl2int(commonInfo.percentData * progressPrecision), false);
+        } else {
+            views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, dbl2int((2-commonInfo.percentData) * progressPrecision), false);
+            views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress", progressPrecision);
+        }
         views.setTextViewText(R.id.wdg_txt_data, String.format(Locale.US, formatter, commonInfo.megabytes, commonInfo.percentData * 100));
         
     }

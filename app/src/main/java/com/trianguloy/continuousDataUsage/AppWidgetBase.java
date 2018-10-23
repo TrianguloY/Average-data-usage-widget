@@ -30,11 +30,6 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     abstract void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId);
     abstract void updateViews(Context context, RemoteViews views);
     
-    /**
-     * Precision of the progress bars. Bigger number means more 'intermediate steps'
-     */
-    static final int PROGRESS_PRECISION = 100;
-    
     private static final String EXTRA_ACTION = "cdu_action";
     static final int ACTION_REFRESH = 0;
     static final int ACTION_USAGE = 1;

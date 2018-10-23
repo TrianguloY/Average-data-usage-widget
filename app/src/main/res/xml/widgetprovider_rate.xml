@@ -8,4 +8,4 @@
     android:previewImage="@drawable/preview_rate"
     android:resizeMode="none"
     android:updatePeriodMillis="3600000"
-    android:widgetCategory="home_screen|keyguard"></appwidget-provider>
+    android:widgetCategory="home_screen|keyguard" />
