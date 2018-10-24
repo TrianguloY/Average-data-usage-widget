@@ -74,12 +74,8 @@ public class AppWidgetProgress extends AppWidgetBase {
         }
         
         //bottom bar
-        if (commonInfo.percentData <= 1) {
-            views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, dbl2int(commonInfo.percentData * progressPrecision), false);
-        } else {
-            views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, dbl2int((2-commonInfo.percentData) * progressPrecision), false);
-            views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress", progressPrecision);
-        }
+        views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, dbl2int((commonInfo.percentData % 1) * progressPrecision), false);
+        views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress", commonInfo.percentData > 1 ? progressPrecision : 0);
         views.setTextViewText(R.id.wdg_txt_data, String.format(Locale.US, formatter, commonInfo.megabytes, commonInfo.percentData * 100));
         
     }
