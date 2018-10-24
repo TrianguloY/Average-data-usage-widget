@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -42,7 +41,6 @@ public class AppWidgetProgress extends AppWidgetBase {
         
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
-        Toast.makeText(context, "Views refreshed", Toast.LENGTH_SHORT).show();
     }
     
     /**
