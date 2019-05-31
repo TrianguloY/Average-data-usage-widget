@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:background="@drawable/background_progress"
+    android:background="@drawable/background_progress_small"
     android:gravity="center"
-    android:paddingLeft="4dp"
+    android:paddingLeft="2dp"
     android:paddingTop="2dp"
-    android:paddingRight="4dp"
+    android:paddingRight="2dp"
     android:paddingBottom="2dp"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
@@ -17,13 +17,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:columnCount="2">
+        android:columnCount="1">
 
         <TextView
             android:id="@+id/wdg_txt_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
+            android:singleLine="true"
             android:text="@string/txt_widget_unloaded"
             android:textColor="@android:color/white"
             android:textSize="9sp" />
@@ -34,8 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="10dp"
             android:layout_gravity="center_vertical|fill_horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:scaleY="0.75"
             android:scrollbarSize="5dp" />
 
@@ -44,9 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
+            android:singleLine="true"
             android:text="@string/txt_widget_unloaded"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <ProgressBar
             android:id="@+id/wdg_prgBar_data"
@@ -54,8 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical|fill_horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:scaleY="1.5"
             android:scrollbarSize="20dp" />
 
@@ -68,6 +70,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_data_usage_black_24dp"
         android:tint="@android:color/white"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 

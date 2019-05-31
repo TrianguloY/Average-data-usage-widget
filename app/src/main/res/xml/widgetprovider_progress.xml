@@ -4,7 +4,7 @@
     android:initialLayout="@layout/widget_progress"
     android:minHeight="40dp"
     android:minWidth="250dp"
-    android:minResizeWidth="180dp"
+    android:minResizeWidth="40dp"
     android:previewImage="@drawable/preview_progress"
     android:resizeMode="horizontal"
     android:updatePeriodMillis="3600000"

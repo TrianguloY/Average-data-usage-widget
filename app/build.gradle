@@ -7,8 +7,6 @@ android {
         applicationId "com.trianguloy.continuousDataUsage"
         minSdkVersion 25
         targetSdkVersion 27
-        versionCode 8
-        versionName "1.4"
     }
     buildTypes {
         release {
