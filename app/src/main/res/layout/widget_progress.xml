@@ -26,7 +26,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:text="@string/txt_widget_unloaded"
             android:textColor="@android:color/white"
-            android:textSize="9sp" />
+            android:textSize="10sp" />
 
         <ProgressBar
             android:id="@+id/wdg_prgBar_date"
