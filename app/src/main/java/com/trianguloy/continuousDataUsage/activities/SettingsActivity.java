@@ -1,4 +1,4 @@
-package com.trianguloy.continuousDataUsage;
+package com.trianguloy.continuousDataUsage.activities;
 
 import android.app.Activity;
 import android.app.AppOpsManager;
@@ -20,6 +20,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.common.Preferences;
 
 import java.text.NumberFormat;
 import java.text.ParseException;

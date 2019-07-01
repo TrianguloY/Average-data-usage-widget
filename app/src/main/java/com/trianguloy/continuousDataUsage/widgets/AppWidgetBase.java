@@ -1,22 +1,18 @@
-package com.trianguloy.continuousDataUsage;
+package com.trianguloy.continuousDataUsage.widgets;
 
-import android.Manifest;
 import android.app.PendingIntent;
-import android.app.usage.NetworkStats;
-import android.app.usage.NetworkStatsManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.os.RemoteException;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.activities.HistoryActivity;
+import com.trianguloy.continuousDataUsage.common.DataUsage;
+import com.trianguloy.continuousDataUsage.common.Preferences;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -81,14 +77,18 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         switch (intent.getIntExtra(EXTRA_ACTION, -1)) {
             case ACTION_USAGE:
                 //open the android usage settings
-                Intent settings = new Intent(Intent.ACTION_MAIN);
-                settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
-                settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                try {
-                    context.startActivity(settings);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(context, R.string.toast_activityNotFound, Toast.LENGTH_SHORT).show();
-                }
+
+                Intent usage = new Intent(context, HistoryActivity.class);
+                context.startActivity(usage);
+
+//                Intent settings = new Intent(Intent.ACTION_MAIN);
+//                settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
+//                settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                try {
+//                    context.startActivity(settings);
+//                } catch (ActivityNotFoundException e) {
+//                    Toast.makeText(context, R.string.toast_activityNotFound, Toast.LENGTH_SHORT).show();
+//                }
                 break;
             case ACTION_INFO:
                 //info requested, set flag
@@ -98,45 +98,45 @@ abstract class AppWidgetBase extends AppWidgetProvider {
                 break;
         }
     }
-    
+
     /**
      * To return a bundle with multiple values in the #getCommonInfo function
      */
     static class ReturnedInfo{
         double percentDate = 0;
         double totalData = 0;
-        
+
         int error = -1;
-        
+
         double percentData = 0;
         double megabytes = 0;
     }
-    
+
     /**
      * The core of the widgets, calculates the necessary data
      * @param context not to be confused with contest
      * @return calculated data in a packed class
      */
-    ReturnedInfo getCommonInfo(Context context){
-        
+    static ReturnedInfo getCommonInfo(Context context){
+
         ReturnedInfo returnedInfo = new ReturnedInfo();
-    
+
         //get preferences
         Preferences pref = new Preferences(context);
-    
+
         boolean infoRequested = pref.isInfoRequested();
-    
-    
+
+
         //date
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-    
+
         //current
         long currentMillis = System.currentTimeMillis();
-    
+
         // get start of the period
         int firstDay = pref.getFirstDay();
         cal.set(Calendar.DAY_OF_MONTH, firstDay);
@@ -144,71 +144,34 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             cal.add(Calendar.MONTH, -1);
         }
         long startOfPeriod = cal.getTimeInMillis();
-    
+
         //get end of period
         cal.add(Calendar.MONTH, 1);
         long endOfPeriod = cal.getTimeInMillis();
-    
+
         //upper bar
         double percentDate = (currentMillis - startOfPeriod) / (double) (endOfPeriod - startOfPeriod);
         returnedInfo.percentDate = percentDate;
         double totalData = pref.getTotalData();
         returnedInfo.totalData = totalData;
-    
-        //check permission
-        if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            //no permission given, can't continue
-        
-            returnedInfo.error = R.string.txt_widget_noPermission;
-            Log.d("widget", "error on checkSelfPermission");
-            return returnedInfo;
-        }
-    
-        //get subscriber id
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if (tm == null) {
-            //can't get telephony manager
-        
-            returnedInfo.error = R.string.txt_widget_errorService;
-            Log.d("widget", "error on TelephonyManager");
-            return returnedInfo;
-        }
-        String subscriberId = tm.getSubscriberId();
-    
-        //get service
-        NetworkStatsManager nsm = context.getSystemService(NetworkStatsManager.class);
-        if (nsm == null) {
-            //can't get NetworkStatsManager
-        
-            returnedInfo.error = R.string.txt_widget_errorService;
-            Log.d("widget", "error on NetworkStatsManager");
-            return returnedInfo;
-        }
-    
-        //get data
-        NetworkStats.Bucket bucket;
-        try {
-            bucket = nsm.querySummaryForDevice(ConnectivityManager.TYPE_MOBILE, subscriberId, startOfPeriod, Long.MAX_VALUE);
-        } catch (RemoteException e) {
-            returnedInfo.error = R.string.txt_widget_errorQuering;
-            Log.d("widget", "error on querySummaryForDevice-RemoteException");
-            return returnedInfo;
-        } catch (SecurityException se) {
-            returnedInfo.error = R.string.txt_widget_noPermission;
-            Log.d("widget", "error on querySummaryForDevice-SecurityException");
-            return returnedInfo;
-        }
-    
+
         //bottom bar
-        double bytesConversion = pref.getAltConversion() ?
-                1f / 1000f / 1000f
-                :
-                1f / 1024f / 1024f;
-        double megabytes = (bucket.getRxBytes() + bucket.getTxBytes()) * bytesConversion;
+        double percentData;
+        double megabytes;
+
+        try {
+            megabytes = new DataUsage(context, pref)
+                    .getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
+        }catch (DataUsage.Error e){
+            returnedInfo.error = e.error;
+            return returnedInfo;
+        }
+
         returnedInfo.megabytes = megabytes;
-        double percentData = megabytes / totalData;
+        percentData = megabytes / totalData;
         returnedInfo.percentData = percentData;
-    
+
+
         //current usage as date
         if (infoRequested) {
             double millisEquivalent = (endOfPeriod - startOfPeriod) * percentData + startOfPeriod;
@@ -218,16 +181,16 @@ abstract class AppWidgetBase extends AppWidgetProvider {
                     SimpleDateFormat.getDateTimeInstance().format(cal.getTime()),
                     millisToInterval(cal.getTimeInMillis() - currentMillis)), Toast.LENGTH_LONG).show();
         }
-    
+
         Log.d("Widget", "updated");
-        
+
         return returnedInfo;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     //--------------utils-------------------
     
     
@@ -250,7 +213,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             remoteViews.setOnClickPendingIntent(view, pendingIntent);
         }
     }
-    
+
     /**
      * Converts millis to a string display
      * @param millis mililiseconds of a specific time
@@ -260,36 +223,36 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         StringBuilder sb = new StringBuilder();
         String prefix = millis >= 0 ? "+ " : "- ";
         millis = millis > 0 ? millis : -millis;
-        
+
         millis /= 1000;
-        
+
         sb.insert(0, " seconds");
         sb.insert(0, millis % 60);
         millis /= 60;
-        
+
         if (millis > 0) {
             sb.insert(0, " minutes, ");
             sb.insert(0, millis % 60);
             millis /= 60;
         }
-        
+
         if (millis > 0) {
             sb.insert(0, " hours, ");
             sb.insert(0, millis % 24);
             millis /= 24;
         }
-        
+
         if (millis > 0) {
             sb.insert(0, " days, ");
             sb.insert(0, millis);
         }
-        
+
         sb.insert(0, prefix);
-        
+
         return sb.toString();
     }
-    
-    
+
+
     /**
      * Rounds double to int
      *
@@ -299,5 +262,5 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     static int dbl2int(double d) {
         return Math.round(Math.round(d));
     }
-    
+
 }

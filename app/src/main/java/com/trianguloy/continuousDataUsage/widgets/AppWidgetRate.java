@@ -1,8 +1,10 @@
-package com.trianguloy.continuousDataUsage;
+package com.trianguloy.continuousDataUsage.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.widget.RemoteViews;
+
+import com.trianguloy.continuousDataUsage.R;
 
 import java.util.Locale;
 
