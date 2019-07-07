@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -206,82 +205,5 @@ public class HistoryActivity extends Activity {
         thread_setPeriod.start();
 
     }
-
-    // ------------------------------
-
-    UpdatePeriod update = null;
-
-    void updatePeriod(){
-        if(update != null) update.cancel(true);
-        update = new UpdatePeriod();
-        update.execute();
-    }
-
-    class UpdatePeriod extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected void onPreExecute() {
-            view_loading.setVisibility(View.VISIBLE);
-            adapter.clearItems();
-            view_right.setVisibility(period >= 0 ? View.GONE : View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-            Calendar to = periodCalendar.getStartOfPeriod(period);
-            String monthFrom = new SimpleDateFormat("MMM-YYYY", Locale.getDefault()).format(to.getTime());
-            long from = to.getTimeInMillis();
-
-            to.add(Calendar.MONTH, 1);
-
-            adapter.setDataPerDay(
-                    pref.getTotalData() / Math.round((to.getTimeInMillis() - from) / 1000d / 60d / 60d / 24d)
-            );
-            try {
-                while(from < to.getTimeInMillis()){
-                    long end = to.getTimeInMillis();
-                    to.add(Calendar.DAY_OF_MONTH, -1);
-
-                    if(monthFrom != null){
-                        String monthTo = new SimpleDateFormat("MMM", Locale.getDefault()).format(to.getTime());
-                        final String month = monthTo.equals(monthFrom) ? monthFrom : monthFrom +" - " + monthTo;
-                        monthFrom = null;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                view_title.setText(month + (period == 0 ? " (now)" : ""));
-                            }
-                        });
-                    }
-
-                    adapter.addItem(dataUsage.getDataFromPeriod(to.getTimeInMillis(), end), dateFormat.format(to.getTime()));
-                }
-            }catch(DataUsage.Error e){
-                adapter.clearItems();
-                Toast.makeText(HistoryActivity.this, e.errorId, Toast.LENGTH_SHORT).show();
-            }
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                    view_loading.setVisibility(View.GONE);
-                }
-            });
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            adapter.notifyDataSetChanged();
-            view_loading.setVisibility(View.GONE);
-        }
-    }
-
-
 
 }

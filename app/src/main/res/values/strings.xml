@@ -1,9 +1,11 @@
 <resources>
 
-    <!-- general -->
+    <!-- main -->
     <string name="app_name">Average data usage widget</string>
     <string name="txt_title_info">Information:</string>
-    <string name="txt_desc_info">This is a small widget utility to show the data plan usage with a \'constant\' usage bar. Useful to know if you are above or below the \'constant\' data usage (if you consume the same data every second).  \nApp created by TrianguloY (<a href="mailto:correo--correo+appCDUW@hotmail.com?Subject=Continous data usage">email</a>)\n\nWidget description:  \n- The upper bar is the optimal continuous usage: 0 at the start of the period, half at the middle of the period, full at the end.   \n- The bottom bar is your current usage. If the bottom bar is less than the upper bar then at that rate you will have data unused. If it is more then you will probably surpass it.  \n- Click the right button of the widget to open the history list, click the text to show the corresponding day of the current usage, click anywhere else to manually update it (it updates automatically).</string>
+    <string name="txt_desc_info">This is a small widget utility to show the data plan usage with a \'constant\' usage bar. Useful to know if you are above or below the \'constant\' data usage (if you consume the same data every second).  \nApp created by TrianguloY (<a href="mailto:correo--correo+appCDUW@hotmail.com?Subject=Continous data usage">email</a>)</string>
+    <string name="txt_desc_widget"> Widget description:  \n- The upper bar is the optimal continuous usage: 0 at the start of the period, half at the middle of the period, full at the end.   \n- The bottom bar is your current usage. If the bottom bar is less than the upper bar then at that rate you will have data unused. If it is more then you will probably surpass it.  \n- Click the right button of the widget to open the history list, click the text to show the corresponding day of the current usage, click anywhere else to manually update it (it updates automatically).</string>
+    <string name="toast_preview">This is just a preview. Add the real widget to your home screen!</string>
 
 
     <!-- History viewer -->

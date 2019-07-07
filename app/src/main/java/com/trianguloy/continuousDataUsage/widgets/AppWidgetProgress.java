@@ -43,6 +43,8 @@ public class AppWidgetProgress extends AppWidgetBase {
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
     
         boolean small = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) < 180;
+
+        //TODO: check if it is possible to crate the views normally and then add it to an empty remoteviews
         
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), small ? R.layout.widget_progress_short : R.layout.widget_progress);
@@ -66,7 +68,7 @@ public class AppWidgetProgress extends AppWidgetBase {
      * @param context base context
      * @param views   views to update
      */
-    void updateViews(Context context, RemoteViews views) {
+    public static void updateViews(Context context, RemoteViews views) {
         ReturnedInfo commonInfo = getCommonInfo(context);
         
         //variables

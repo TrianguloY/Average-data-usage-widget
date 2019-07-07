@@ -99,7 +99,7 @@ public class SettingsActivity extends Activity {
 
         //firstDay
         Spinner view_firstDay = findViewById(R.id.stt_spn_firstDay);
-        final Integer days[] = new Integer[28];
+        final Integer[] days = new Integer[28];
         for (int i = 0; i < 28; i++) {
             days[i] = i + 1;
         }

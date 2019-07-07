@@ -38,7 +38,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="25dp" />
 
         <TextView
             android:id="@+id/textView4"
@@ -57,9 +57,19 @@
         <FrameLayout
             android:id="@+id/m_f_widget"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:onClick="onButtonClick">
 
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/stt_txt_info2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_desc_widget"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 

@@ -26,7 +26,6 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     
     //abstract
     abstract void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId);
-    abstract void updateViews(Context context, RemoteViews views);
     
     private static final String EXTRA_ACTION = "cdu_action";
     static final int ACTION_REFRESH = 0;
