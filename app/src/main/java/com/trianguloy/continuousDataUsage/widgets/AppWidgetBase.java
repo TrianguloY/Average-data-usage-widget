@@ -6,12 +6,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.trianguloy.continuousDataUsage.R;
 import com.trianguloy.continuousDataUsage.activities.HistoryActivity;
 import com.trianguloy.continuousDataUsage.common.DataUsage;
+import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
 
 import java.text.SimpleDateFormat;
@@ -76,19 +78,9 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         switch (intent.getIntExtra(EXTRA_ACTION, -1)) {
             case ACTION_USAGE:
-                //open the android usage settings
-
+                //open the history activity
                 Intent usage = new Intent(context, HistoryActivity.class);
                 context.startActivity(usage);
-
-//                Intent settings = new Intent(Intent.ACTION_MAIN);
-//                settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
-//                settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                try {
-//                    context.startActivity(settings);
-//                } catch (ActivityNotFoundException e) {
-//                    Toast.makeText(context, R.string.toast_activityNotFound, Toast.LENGTH_SHORT).show();
-//                }
                 break;
             case ACTION_INFO:
                 //info requested, set flag
@@ -126,28 +118,15 @@ abstract class AppWidgetBase extends AppWidgetProvider {
 
         boolean infoRequested = pref.isInfoRequested();
 
-
-        //date
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the hour of day !
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        //current
+        //current time
         long currentMillis = System.currentTimeMillis();
 
-        // get start of the period
-        int firstDay = pref.getFirstDay();
-        cal.set(Calendar.DAY_OF_MONTH, firstDay);
-        if (currentMillis < cal.getTimeInMillis()) {
-            cal.add(Calendar.MONTH, -1);
-        }
-        long startOfPeriod = cal.getTimeInMillis();
+        //current period
+        PeriodCalendar periodCalendar = new PeriodCalendar(pref.getFirstDay());
+        Pair<Long, Long> val = periodCalendar.getPeriod(0);
+        long startOfPeriod = val.first;
+        long endOfPeriod = val.second;
 
-        //get end of period
-        cal.add(Calendar.MONTH, 1);
-        long endOfPeriod = cal.getTimeInMillis();
 
         //upper bar
         double percentDate = (currentMillis - startOfPeriod) / (double) (endOfPeriod - startOfPeriod);
@@ -160,10 +139,20 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         double megabytes;
 
         try {
-            megabytes = new DataUsage(context, pref)
-                    .getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
+            DataUsage dataUsage = new DataUsage(context, pref);
+            megabytes = dataUsage.getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
+
+            if(pref.getAccumulate()) {
+                //subtract accumulated from previous period
+                double prev = dataUsage.getAccumulated();
+
+                if (prev > 0)
+                    megabytes -= prev;
+                //if(megabytes<0)megabytes=0;
+            }
+
         }catch (DataUsage.Error e){
-            returnedInfo.error = e.error;
+            returnedInfo.error = e.errorId;
             return returnedInfo;
         }
 
@@ -175,6 +164,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         //current usage as date
         if (infoRequested) {
             double millisEquivalent = (endOfPeriod - startOfPeriod) * percentData + startOfPeriod;
+            Calendar cal = Calendar.getInstance();
             cal.clear();
             cal.setTimeInMillis(Math.round(millisEquivalent));
             Toast.makeText(context, context.getString(R.string.toast_currentUsage,
@@ -252,15 +242,5 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         return sb.toString();
     }
 
-
-    /**
-     * Rounds double to int
-     *
-     * @param d double value
-     * @return round(d) as int
-     */
-    static int dbl2int(double d) {
-        return Math.round(Math.round(d));
-    }
 
 }

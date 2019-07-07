@@ -16,7 +16,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
-        <activity android:name=".activities.HistoryActivity"></activity>
+        <activity android:name=".activities.Main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/s_title"
+            android:parentActivityName=".activities.Main">
+        </activity>
+        <activity
+            android:name=".activities.HistoryActivity"
+            android:label="@string/h_title"
+            android:parentActivityName=".activities.Main"/>
 
         <receiver
             android:name=".widgets.AppWidgetProgress"
@@ -41,15 +56,6 @@
                 android:resource="@xml/widgetprovider_rate" />
         </receiver>
 
-        <activity
-            android:name=".activities.SettingsActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

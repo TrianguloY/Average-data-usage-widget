@@ -5,36 +5,16 @@
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:orientation="vertical"
-    tools:context="com.trianguloy.continuousDataUsage.activities.SettingsActivity">
+    tools:context="com.trianguloy.continuousDataUsage.activities.SettingsActivity"
+    tools:menu="@menu/menu_history">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_margin"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         tools:context="com.trianguloy.continuousDataUsage.activities.SettingsActivity">
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_title_info"
-            android:textAppearance="@android:style/TextAppearance.Material.Title" />
-
-        <TextView
-            android:id="@+id/stt_txt_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_desc_info"
-            android:textAllCaps="false" />
-
-        <ImageView
-            android:id="@+id/bigseparator1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/activity_margin"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:src="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/textView3"
@@ -94,8 +74,8 @@
             android:id="@+id/bigseparator2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/activity_margin"
             android:layout_marginTop="@dimen/activity_margin"
+            android:layout_marginBottom="@dimen/activity_margin"
             android:src="@color/colorPrimary" />
 
         <TextView
@@ -132,7 +112,7 @@
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MB"
+                android:text="@string/settings_mb"
                 android:textAllCaps="false"
                 android:textStyle="bold" />
 
@@ -175,6 +155,70 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/chkbx_setting_altConv" />
+
+        <ImageView
+            android:id="@+id/smallSeparator4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="@dimen/activity_margin"
+            android:src="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_settings_accum" />
+
+        <CheckBox
+            android:id="@+id/stt_chkBx_accum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/chkbx_settings_accum" />
+
+        <LinearLayout
+            android:id="@+id/ll_accum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_settings_accum_extra" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/stt_edTxt_accum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="numberDecimal" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_mb"
+                    android:textAllCaps="false"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/stt_btn_accum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onButtonClick"
+                    android:text="@string/btn_settings_accum" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"

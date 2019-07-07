@@ -20,8 +20,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.common.DataUsage;
+import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
 
 import java.text.NumberFormat;
@@ -34,9 +37,11 @@ import java.util.Locale;
  */
 public class SettingsActivity extends Activity {
 
-
     // used classes
     private Preferences pref = null;
+
+    // variables
+    private EditText view_accumulated;
 
 
     /**
@@ -122,9 +127,49 @@ public class SettingsActivity extends Activity {
         });
 
 
+        //accumulate
+        final CheckBox view_accumulate = findViewById(R.id.stt_chkBx_accum);
+        final View view_ll = findViewById(R.id.ll_accum);
+        view_accumulate.setChecked(pref.getAccumulate());
+        view_ll.setVisibility(pref.getAccumulate() ? View.VISIBLE : View.GONE);
+        view_accumulate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pref.setAccumulate(view_accumulate.isChecked());
+                view_ll.setVisibility(view_accumulate.isChecked() ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        //accumulated
+        view_accumulated = findViewById(R.id.stt_edTxt_accum);
+        view_accumulated.setText(String.format(Locale.US, "%s", pref.getAccumulated().first));
+        view_accumulated.setHint(view_accumulated.getText());
+        view_accumulated.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {
+                    float accum = NumberFormat.getInstance(Locale.US).parse(editable.toString()).floatValue();
+
+                    pref.setAccumulated(accum, new PeriodCalendar(pref.getFirstDay()).getCurrentMonth());
+                    view_accumulated.setHint(String.format(Locale.US, "%s", accum));
+                } catch (ParseException e) {
+                    Log.d("settings","numberformatexception");
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         //clickable links
-        for (int id : new int[]{R.id.stt_txt_info, R.id.stt_txt_perm_ps,R.id.stt_txt_perm_us} ) {
+        for (int id : new int[]{R.id.stt_txt_perm_ps,R.id.stt_txt_perm_us} ) {
             ((TextView) findViewById(id)).setMovementMethod(LinkMovementMethod.getInstance());
         }
 
@@ -178,6 +223,15 @@ public class SettingsActivity extends Activity {
             case R.id.stt_btn_usageStats:
                 //open usage settings to give permission
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                break;
+
+            case R.id.stt_btn_accum:
+                //auto-calculate accumulated
+                try {
+                    view_accumulated.setText(String.format(Locale.US, "%s", new DataUsage(this, pref).calculateAccumulated()));
+                }catch(DataUsage.Error e){
+                    Toast.makeText(this, getString(e.errorId), Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
