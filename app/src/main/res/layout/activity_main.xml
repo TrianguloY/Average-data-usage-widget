@@ -24,6 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:drawableStart="@drawable/ic_history"
+                android:drawableTint="#AAAAAA"
                 android:onClick="onButtonClick"
                 android:text="@string/h_title" />
 
@@ -32,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:drawableStart="@android:drawable/ic_menu_manage"
                 android:onClick="onButtonClick"
                 android:text="@string/s_title" />
         </LinearLayout>
@@ -54,15 +57,15 @@
             android:text="@string/txt_desc_info"
             android:textAllCaps="false" />
 
-        <FrameLayout
+        <com.trianguloy.continuousDataUsage.common.NonTouchableView
             android:id="@+id/m_f_widget"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:onClick="onButtonClick">
 
-        </FrameLayout>
+        </com.trianguloy.continuousDataUsage.common.NonTouchableView>
 
         <TextView
             android:id="@+id/stt_txt_info2"

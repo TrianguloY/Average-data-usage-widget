@@ -36,7 +36,6 @@ public class Main extends Activity {
 
         preview = findViewById(R.id.m_f_widget);
 
-
     }
 
     /**
@@ -66,7 +65,7 @@ public class Main extends Activity {
                 break;
             case R.id.m_f_widget:
                 //show info
-                Toast.makeText(this, R.string.toast_preview, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_preview, Toast.LENGTH_LONG).show();
                 break;
         }
 

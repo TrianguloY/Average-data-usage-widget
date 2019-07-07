@@ -65,7 +65,7 @@ public class HistoryActivity extends Activity {
         try{
             dataUsage = new DataUsage(this, pref);
         }catch (DataUsage.Error e){
-            Toast.makeText(this, e.errorId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, e.errorId, Toast.LENGTH_LONG).show();
         }
 
         period = 0;
@@ -119,7 +119,7 @@ public class HistoryActivity extends Activity {
                 try {
                     startActivity(settings);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, R.string.toast_activityNotFound, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.toast_activityNotFound, Toast.LENGTH_LONG).show();
                 }
                 return true;
         }
@@ -130,7 +130,7 @@ public class HistoryActivity extends Activity {
 
         //init variables
         final Calendar to = periodCalendar.getStartOfPeriod(period);
-        SimpleDateFormat title_format = new SimpleDateFormat("MMM YYYY", Locale.getDefault());
+        SimpleDateFormat title_format = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
 
         //get from
         String monthFrom = title_format.format(to.getTime());
@@ -185,7 +185,7 @@ public class HistoryActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(HistoryActivity.this, e.errorId, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HistoryActivity.this, e.errorId, Toast.LENGTH_LONG).show();
                         }
                     });
                 }

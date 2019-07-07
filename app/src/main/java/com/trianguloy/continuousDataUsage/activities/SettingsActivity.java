@@ -90,7 +90,7 @@ public class SettingsActivity extends Activity {
                         pref.setTotalData(totalData);
                         view_totalData.setHint(String.format(Locale.US, "%s", totalData));
                     }
-                } catch (ParseException e) {
+                } catch (ParseException | NullPointerException e) {
                     Log.d("settings","numberformatexception");
                     e.printStackTrace();
                 }
@@ -160,7 +160,7 @@ public class SettingsActivity extends Activity {
 
                     pref.setAccumulated(accum, new PeriodCalendar(pref.getFirstDay()).getCurrentMonth());
                     view_accumulated.setHint(String.format(Locale.US, "%s", accum));
-                } catch (ParseException e) {
+                } catch (ParseException | NullPointerException e) {
                     Log.d("settings","numberformatexception");
                     e.printStackTrace();
                 }
@@ -230,7 +230,7 @@ public class SettingsActivity extends Activity {
                 try {
                     view_accumulated.setText(String.format(Locale.US, "%s", new DataUsage(this, pref).calculateAccumulated()));
                 }catch(DataUsage.Error e){
-                    Toast.makeText(this, getString(e.errorId), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                 }
                 break;
         }
