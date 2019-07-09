@@ -61,6 +61,7 @@ public class HistoryActivity extends Activity {
         view_right = findViewById(R.id.h_btn_right);
 
         view_list.setAdapter(adapter);
+        adapter.setDummyView(findViewById(R.id.h_item_dummy));
 
         try{
             dataUsage = new DataUsage(this, pref);

@@ -54,6 +54,11 @@ public class ListAdapter extends BaseAdapter {
      */
     private float dataPerDay;
 
+    /**
+     * Dumy view to extract sizes
+     */
+    private View dummy;
+
     //---------- Public -----------
 
     /**
@@ -83,6 +88,11 @@ public class ListAdapter extends BaseAdapter {
      */
     void setDataPerDay(float dataPerDay) {
         this.dataPerDay = dataPerDay;
+    }
+
+
+    public void setDummyView(View dummy) {
+        this.dummy = dummy;
     }
 
     //------------ Adapter overrides ---------------
@@ -117,6 +127,13 @@ public class ListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(cntx).
                     inflate(R.layout.lv_item, parent, false);
+
+            for(int id : new int[]{R.id.lv_txt_date, R.id.lv_txt_usage, R.id.lv_pgb_negative, R.id.lv_pgb_positive}) {
+                View view = convertView.findViewById(id);
+                ViewGroup.LayoutParams lp = view.getLayoutParams();
+                lp.width = dummy.findViewById(id).getWidth();
+                view.setLayoutParams(lp);
+            }
         }
 
         // get current item to be displayed
