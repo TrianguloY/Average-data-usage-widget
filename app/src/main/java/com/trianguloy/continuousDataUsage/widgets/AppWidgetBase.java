@@ -79,6 +79,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             case ACTION_USAGE:
                 //open the history activity
                 Intent usage = new Intent(context, HistoryActivity.class);
+                usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(usage);
                 break;
             case ACTION_INFO:

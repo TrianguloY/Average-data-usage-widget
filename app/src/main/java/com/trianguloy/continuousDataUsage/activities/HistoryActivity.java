@@ -66,10 +66,10 @@ public class HistoryActivity extends Activity {
             dataUsage = new DataUsage(this, pref);
         }catch (DataUsage.Error e){
             Toast.makeText(this, e.errorId, Toast.LENGTH_LONG).show();
+            finish();
         }
 
         period = 0;
-
         view_list.post(new Runnable() {
             @Override
             public void run() {
@@ -115,7 +115,6 @@ public class HistoryActivity extends Activity {
                 //open android usage screen
                 Intent settings = new Intent(Intent.ACTION_MAIN);
                 settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
-                settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 try {
                     startActivity(settings);
                 } catch (ActivityNotFoundException e) {

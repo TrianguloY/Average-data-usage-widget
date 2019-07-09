@@ -73,7 +73,12 @@ public class DataUsage {
             Log.d("widget", "error on TelephonyManager");
             throw new Error(R.string.txt_widget_errorService);
         }
-        subscriberId = tm.getSubscriberId();
+        try {
+            subscriberId = tm.getSubscriberId();
+            //subscriberId = "";
+        }catch (SecurityException e){
+            throw new Error(R.string.txt_widget_noPermission);
+        }
 
         //get service
         nsm = context.getSystemService(NetworkStatsManager.class);
