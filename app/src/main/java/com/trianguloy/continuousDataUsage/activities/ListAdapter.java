@@ -47,6 +47,7 @@ public class ListAdapter extends BaseAdapter {
      * Items in the list
      */
     private ArrayList<Item> items = new ArrayList<>();
+    private ArrayList<Item> itemsTemp = new ArrayList<>();
 
     /**
      * Data per day
@@ -69,13 +70,13 @@ public class ListAdapter extends BaseAdapter {
      * @param date the date of the item
      */
     void addItem(double usage, String date){
-        items.add(0, new Item(usage, date));
+        itemsTemp.add(0, new Item(usage, date));
     }
 
     /**
      * Removes all the items, doesn't refresh
      */
-    void clearItems(){items.clear();}
+    void clearItems(){itemsTemp.clear();}
 
     /**
      * sets the data per day
@@ -85,6 +86,14 @@ public class ListAdapter extends BaseAdapter {
     }
 
     //------------ Adapter overrides ---------------
+
+
+    @Override
+    public void notifyDataSetChanged() {
+        items = itemsTemp;
+        itemsTemp = new ArrayList<>();
+        super.notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {
@@ -128,10 +137,11 @@ public class ListAdapter extends BaseAdapter {
         if(rate > 1){
             pgb_negative.setProgress(0);
             pgb_positive.setProgress(Utils.dbl2int ( (rate % 1) * pgb_positive.getMax()) );
-            if(rate > 2) pgb_positive.setSecondaryProgress(pgb_positive.getMax());
+            pgb_positive.setSecondaryProgress( rate > 2 ? pgb_positive.getMax() : 0);
         }else{
             pgb_positive.setProgress(0);
             pgb_negative.setProgress(Utils.dbl2int( (1 - rate) * pgb_negative.getMax() ));
+            pgb_positive.setSecondaryProgress(0);
         }
 
         // returns the view for the current row

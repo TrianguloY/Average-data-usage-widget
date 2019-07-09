@@ -160,6 +160,7 @@ public class HistoryActivity extends Activity {
         //set as loading
         view_loading.setVisibility(View.VISIBLE);
         adapter.clearItems();
+        adapter.notifyDataSetChanged();
         view_right.setEnabled(period < 0);
 
 
