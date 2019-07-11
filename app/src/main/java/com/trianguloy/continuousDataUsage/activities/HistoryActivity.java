@@ -2,6 +2,7 @@ package com.trianguloy.continuousDataUsage.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.TaskStackBuilder;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -120,6 +121,15 @@ public class HistoryActivity extends Activity {
                     startActivity(settings);
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(this, R.string.toast_activityNotFound, Toast.LENGTH_LONG).show();
+                }
+                return true;
+            case android.R.id.home:
+                //explicitly go back to main activity
+                final Intent upIntent = getParentActivityIntent();
+                if (shouldUpRecreateTask(upIntent) || isTaskRoot()) {
+                    TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
+                } else {
+                    navigateUpTo(upIntent);
                 }
                 return true;
         }
