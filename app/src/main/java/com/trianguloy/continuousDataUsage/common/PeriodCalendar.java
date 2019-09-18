@@ -24,7 +24,7 @@ public class PeriodCalendar {
 
     /**
      * Returns the start and end millis of the specified period
-     * @param period 0 ofr current, -1 for previous, -2 for tow previous...
+     * @param period 0 for current, -1 for previous, -2 for two previous...
      * @return start&end millis pair
      */
     public Pair<Long, Long> getPeriod(int period){

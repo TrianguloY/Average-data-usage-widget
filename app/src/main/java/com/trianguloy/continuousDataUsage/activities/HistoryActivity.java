@@ -82,6 +82,12 @@ public class HistoryActivity extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setPeriod();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_history, menu);
         return true;
