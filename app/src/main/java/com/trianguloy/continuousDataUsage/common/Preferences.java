@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Pair;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Utility class to manage the shared preferences
  */
@@ -16,6 +20,7 @@ public class Preferences {
      */
     private static final String PREF_NAME = "pref";
     private SharedPreferences sharedPreferences;
+
     public Preferences(Context context) {
         this.sharedPreferences = context.getSharedPreferences(Preferences.PREF_NAME, Context.MODE_PRIVATE);
     }
@@ -104,5 +109,46 @@ public class Preferences {
                 .putFloat(KEY_ACCUMULATED, accumulated)
                 .putInt(KEY_ACCUMULATEDM, month)
                 .apply();
+    }
+
+    // ------------------- tweaks -------------------
+
+    /**
+     * Tweaks
+     */
+    private static final String KEY_TWEAKS = "tweaks";
+    private final Set<String> DEFAULT_TWEAKS = Collections.emptySet();
+    public boolean getTweak(Tweaks.Items tweak){
+        return sharedPreferences.getBoolean(tweak.name(),false);
+    }
+    public void setTweak(Tweaks.Items tweak, boolean enabled){
+        sharedPreferences.edit().putBoolean(tweak.name(),enabled).apply();
+    }
+    public void cleanupTweaks(){
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        // remove old tweaks:
+        for (String name : sharedPreferences.getStringSet(KEY_TWEAKS, DEFAULT_TWEAKS)) {
+            // check every saved tweak
+            try {
+                // check if still exists
+                Tweaks.Items.valueOf(name);
+            }catch (IllegalArgumentException e){
+                // if not, remove
+                edit.remove(name);
+            }
+        }
+
+        // save current tweaks list:
+        Tweaks.Items[] items = Tweaks.Items.values();
+        Set<String> names = new HashSet<>(items.length);
+        for (Tweaks.Items tweak : items){
+            // add current tweak name to list
+            names.add(tweak.name());
+        }
+        edit.putStringSet(KEY_TWEAKS, names);
+
+        // save
+        edit.apply();
     }
 }

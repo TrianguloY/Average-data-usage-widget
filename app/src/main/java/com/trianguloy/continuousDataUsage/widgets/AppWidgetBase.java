@@ -15,6 +15,7 @@ import com.trianguloy.continuousDataUsage.activities.HistoryActivity;
 import com.trianguloy.continuousDataUsage.common.DataUsage;
 import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
+import com.trianguloy.continuousDataUsage.common.Tweaks;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -170,6 +171,13 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             Toast.makeText(context, context.getString(R.string.toast_currentUsage,
                     SimpleDateFormat.getDateTimeInstance().format(cal.getTime()),
                     millisToInterval(cal.getTimeInMillis() - currentMillis)), Toast.LENGTH_LONG).show();
+        }
+
+        // tweaks
+        if (pref.getTweak(Tweaks.Items.showRemaining)) {
+            returnedInfo.percentData = 1 - returnedInfo.percentData;
+            returnedInfo.megabytes = returnedInfo.totalData - returnedInfo.megabytes;
+            returnedInfo.percentDate = 1 - returnedInfo.percentDate;
         }
 
         Log.d("Widget", "updated");

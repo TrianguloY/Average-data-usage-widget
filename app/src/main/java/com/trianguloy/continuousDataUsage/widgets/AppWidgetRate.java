@@ -2,9 +2,12 @@ package com.trianguloy.continuousDataUsage.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.RemoteViews;
 
 import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.common.Preferences;
+import com.trianguloy.continuousDataUsage.common.Tweaks;
 
 import java.util.Locale;
 
@@ -53,7 +56,22 @@ public class AppWidgetRate extends AppWidgetBase {
         //number
         double rate = commonInfo.percentData / commonInfo.percentDate;
         views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
-        
+
+        // tweaks
+        Preferences pref = new Preferences(context);
+        if(pref.getTweak(Tweaks.Items.showConsumed)){
+            rate = commonInfo.megabytes;
+            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
+        }
+        if(pref.getTweak(Tweaks.Items.showAverage)){
+            rate = commonInfo.totalData;
+            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
+        }
+        if(pref.getTweak(Tweaks.Items.whiteWidgets)){
+            views.setInt(R.id.wdg_parent, "setBackgroundResource", R.drawable.background_rate_white);
+            views.setTextColor(R.id.wdg_txt_rate, Color.BLACK);
+        }
+
     }
 }
 

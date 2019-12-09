@@ -52,4 +52,16 @@
     <string name="btn_left"><![CDATA[<]]></string>
     <string name="btn_right"><![CDATA[>]]></string>
 
+    <!-- tweaks -->
+    <string name="btn_tweaks">Tweaks</string>
+    <string name="desc_tweaks">List of experimental settings to tweak some properties of widgets (may be added/removed in future versions if necessary). Some combinations may not work together or show unwanted results (like \'hide date\'+\'hide data\' which will show an empty widget) but they are safe to enable/disable so have fun tweaking as you want.\n\nImportant! Existing widgets may need to be clicked or removed/added to update.</string>
+    <string name="btn_close">close</string>
+    <string name="tweak_hideDate">Hide date bar and text (the top one)</string>
+    <string name="tweak_hideData">Hide data bar and text (the bottom one)</string>
+    <string name="tweak_whiteWidgets">Show light-theme widgets (white background with black text)</string>
+    <string name="tweak_showConsumed">Show the consumed data in the 1x1 widget (instead of the rate)</string>
+    <string name="tweak_showAverage">Show the average data in the 1x1 widget (instead of the rate)</string>
+    <string name="tweak_showRemaining">Show remaining data instead of consumed data (bars will move from 100% to 0% instead of 0% to 100%)</string>
+    <string name="tweak_capNoWarp">Keep bar at 100% instead of warping (in case your device don\'t show the secondary bar)</string>
+
 </resources>

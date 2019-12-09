@@ -26,6 +26,7 @@ import com.trianguloy.continuousDataUsage.R;
 import com.trianguloy.continuousDataUsage.common.DataUsage;
 import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
+import com.trianguloy.continuousDataUsage.common.Tweaks;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -232,6 +233,10 @@ public class SettingsActivity extends Activity {
                 }catch(DataUsage.Error e){
                     Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                 }
+                break;
+            case R.id.stt_btn_tweaks:
+                // show tweaks
+                new Tweaks(pref, this).showDialog();
                 break;
         }
     }

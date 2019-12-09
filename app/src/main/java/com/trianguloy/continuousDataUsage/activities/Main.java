@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.common.Preferences;
+import com.trianguloy.continuousDataUsage.common.Tweaks;
 import com.trianguloy.continuousDataUsage.widgets.AppWidgetProgress;
 
 /**
@@ -79,9 +81,23 @@ public class Main extends Activity {
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_progress);
         AppWidgetProgress.updateViews(this, remoteViews);
 
-        View views =   remoteViews.apply(this, preview);
-        preview.removeAllViews();
-        preview.addView(views);
+        try {
+
+            View views = remoteViews.apply(this, preview);
+            preview.removeAllViews();
+            preview.addView(views);
+
+        }catch (Throwable ignore){
+
+            // if exception, disable
+            Toast.makeText(this, "Exception detected, disabling tweaks", Toast.LENGTH_LONG).show();
+            Preferences prefs = new Preferences(this);
+            for(Tweaks.Items item : Tweaks.Items.values()){
+                prefs.setTweak(item, false);
+            }
+            updatePreview();
+
+        }
     }
 
 }

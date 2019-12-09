@@ -220,6 +220,26 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/smallSeparator5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="@dimen/activity_margin"
+            android:src="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/desc_tweaks" />
+
+        <Button
+            android:id="@+id/stt_btn_tweaks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onButtonClick"
+            android:text="@string/btn_tweaks" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="50dp" />
