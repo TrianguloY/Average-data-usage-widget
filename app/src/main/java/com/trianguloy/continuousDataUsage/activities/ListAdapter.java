@@ -155,7 +155,7 @@ public class ListAdapter extends BaseAdapter {
         // sets the properties
         txt_date.setText(currentItem.date);
 
-        txt_usage.setText(String.format(Locale.US, "%.2f / %.2f MB", currentItem.usage, dataPerDay));
+        txt_usage.setText(String.format(Locale.US, pref.getDecimalsFormatter() + " / " + pref.getDecimalsFormatter() + " MB", currentItem.usage, dataPerDay));
 
         double rate = currentItem.usage / dataPerDay;
         if (rate > 1) {

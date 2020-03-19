@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ public class SettingsActivity extends Activity {
 
     // variables
     private EditText view_accumulated;
+    private TextView view_txt_decimals;
+    private SeekBar view_sb_decimals;
 
 
     /**
@@ -168,6 +171,23 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        // decimals
+        view_txt_decimals = findViewById(R.id.sst_txt_decimals);
+        view_sb_decimals = findViewById(R.id.stt_sb_decimals);
+        view_sb_decimals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                view_txt_decimals.setText(Integer.toString(i));
+                pref.setDecimals(i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        view_sb_decimals.setProgress(pref.getDecimals(),true);
 
         //clickable links
         for (int id : new int[]{R.id.stt_txt_perm_ps,R.id.stt_txt_perm_us} ) {

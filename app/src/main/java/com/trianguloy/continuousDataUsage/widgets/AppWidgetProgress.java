@@ -71,9 +71,10 @@ public class AppWidgetProgress extends AppWidgetBase {
      */
     public static void updateViews(Context context, RemoteViews views) {
         ReturnedInfo commonInfo = getCommonInfo(context);
+        Preferences pref = new Preferences(context);
 
         //variables
-        String formatter = "%.2f MB (%.2f%%)";
+        String formatter = pref.getDecimalsFormatter()+" MB (%.2f%%)";
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point p = new Point(context.getResources().getInteger(R.integer.DEFAULT_PROGRESS_PRECISION), 0);
         if (wm != null) {
@@ -100,7 +101,6 @@ public class AppWidgetProgress extends AppWidgetBase {
         views.setTextViewText(R.id.wdg_txt_data, String.format(Locale.US, formatter, commonInfo.megabytes, commonInfo.percentData * 100));
 
         // tweaks
-        Preferences pref = new Preferences(context);
         if (pref.getTweak(Tweaks.Items.hideDate)) {
             views.setViewVisibility(R.id.wdg_txt_date, View.GONE);
             views.setViewVisibility(R.id.wdg_prgBar_date, View.GONE);

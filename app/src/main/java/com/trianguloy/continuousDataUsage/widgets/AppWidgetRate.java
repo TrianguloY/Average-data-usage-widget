@@ -47,25 +47,25 @@ public class AppWidgetRate extends AppWidgetBase {
      */
     void updateViews(Context context, RemoteViews views) {
         ReturnedInfo commonInfo = getCommonInfo(context);
-        
+        Preferences pref = new Preferences(context);
+
         if(commonInfo.error != -1){
             views.setTextViewText(R.id.wdg_txt_rate, context.getString(commonInfo.error));
             return;
         }
-        
+
         //number
         double rate = commonInfo.percentData / commonInfo.percentDate;
         views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
 
         // tweaks
-        Preferences pref = new Preferences(context);
         if(pref.getTweak(Tweaks.Items.showConsumed)){
             rate = commonInfo.megabytes;
-            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
+            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, pref.getDecimalsFormatter(), rate));
         }
         if(pref.getTweak(Tweaks.Items.showAverage)){
             rate = commonInfo.totalData;
-            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
+            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, pref.getDecimalsFormatter(), rate));
         }
         if(pref.getTweak(Tweaks.Items.whiteWidgets)){
             views.setInt(R.id.wdg_parent, "setBackgroundResource", R.drawable.background_rate_white);
