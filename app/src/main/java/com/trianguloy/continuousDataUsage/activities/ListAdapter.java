@@ -9,6 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.common.Preferences;
+import com.trianguloy.continuousDataUsage.common.Tweaks;
 import com.trianguloy.continuousDataUsage.common.Utils;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class ListAdapter extends BaseAdapter {
     /**
      * Each element in the list
      */
-    class Item{
+    class Item {
         /**
          * The usage
          */
@@ -63,6 +65,7 @@ public class ListAdapter extends BaseAdapter {
 
     /**
      * Default constructor
+     *
      * @param cntx context
      */
     ListAdapter(Context cntx) {
@@ -71,17 +74,20 @@ public class ListAdapter extends BaseAdapter {
 
     /**
      * Adds an item, doesn't refresh
+     *
      * @param usage the usage of the item
-     * @param date the date of the item
+     * @param date  the date of the item
      */
-    void addItem(double usage, String date){
+    void addItem(double usage, String date) {
         itemsTemp.add(0, new Item(usage, date));
     }
 
     /**
      * Removes all the items, doesn't refresh
      */
-    void clearItems(){itemsTemp.clear();}
+    void clearItems() {
+        itemsTemp.clear();
+    }
 
     /**
      * sets the data per day
@@ -122,13 +128,14 @@ public class ListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Preferences pref = new Preferences(cntx);
 
         // inflate the layout for each list row
         if (convertView == null) {
             convertView = LayoutInflater.from(cntx).
                     inflate(R.layout.lv_item, parent, false);
 
-            for(int id : new int[]{R.id.lv_txt_date, R.id.lv_txt_usage, R.id.lv_pgb_negative, R.id.lv_pgb_positive}) {
+            for (int id : new int[]{R.id.lv_txt_date, R.id.lv_txt_usage, R.id.lv_pgb_negative, R.id.lv_pgb_positive}) {
                 View view = convertView.findViewById(id);
                 ViewGroup.LayoutParams lp = view.getLayoutParams();
                 lp.width = dummy.findViewById(id).getWidth();
@@ -151,14 +158,24 @@ public class ListAdapter extends BaseAdapter {
         txt_usage.setText(String.format(Locale.US, "%.2f / %.2f MB", currentItem.usage, dataPerDay));
 
         double rate = currentItem.usage / dataPerDay;
-        if(rate > 1){
+        if (rate > 1) {
+            // more than average
             pgb_negative.setProgress(0);
-            pgb_positive.setProgress(Utils.dbl2int ( (rate % 1) * pgb_positive.getMax()) );
-            pgb_positive.setSecondaryProgress( rate > 2 ? pgb_positive.getMax() : 0);
-        }else{
+            pgb_positive.setProgress(Utils.dbl2int((rate % 1) * pgb_positive.getMax()));
+            pgb_positive.setSecondaryProgress(rate > 2 ? pgb_positive.getMax() : 0);
+        } else {
+            // less than average
+            pgb_negative.setProgress(Utils.dbl2int((1 - rate) * pgb_negative.getMax()));
             pgb_positive.setProgress(0);
-            pgb_negative.setProgress(Utils.dbl2int( (1 - rate) * pgb_negative.getMax() ));
             pgb_positive.setSecondaryProgress(0);
+        }
+
+        // tweaks
+        if (pref.getTweak(Tweaks.Items.capNoWarp) && pgb_positive.getSecondaryProgress() > 0) {
+            // cap
+            pgb_positive.setProgress(pgb_positive.getMax());
+            pgb_positive.setSecondaryProgress(0);
+
         }
 
         // returns the view for the current row
