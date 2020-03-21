@@ -14,8 +14,6 @@ import com.trianguloy.continuousDataUsage.common.Preferences;
 import com.trianguloy.continuousDataUsage.common.Tweaks;
 import com.trianguloy.continuousDataUsage.common.Utils;
 
-import java.util.Locale;
-
 /**
  * Implementation of the Progress Widget functionality.
  * Displays the values and two progress bar corresponding to the 'average' and 'current' usage.
@@ -74,7 +72,6 @@ public class AppWidgetProgress extends AppWidgetBase {
         Preferences pref = new Preferences(context);
 
         //variables
-        String formatter = " (%.2f%%)";
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point p = new Point(context.getResources().getInteger(R.integer.DEFAULT_PROGRESS_PRECISION), 0);
         if (wm != null) {
@@ -85,8 +82,7 @@ public class AppWidgetProgress extends AppWidgetBase {
         //top bar
         views.setProgressBar(R.id.wdg_prgBar_date, progressPrecision, Utils.dbl2int(commonInfo.percentDate * progressPrecision), false);
         views.setTextViewText(R.id.wdg_txt_date,
-                Utils.formatData(pref, commonInfo.percentDate * commonInfo.totalData, true) +
-                        String.format(Locale.US, formatter, commonInfo.percentDate * 100)
+                Utils.formatData(pref, "{M} ({%})", commonInfo.percentDate * commonInfo.totalData, commonInfo.percentDate * 100)
         );
 
         //error
@@ -102,8 +98,7 @@ public class AppWidgetProgress extends AppWidgetBase {
                         : commonInfo.percentData < 0 ? Utils.dbl2int((1 + commonInfo.percentData) * progressPrecision)
                         : 0);
         views.setTextViewText(R.id.wdg_txt_data,
-                Utils.formatData(pref, commonInfo.megabytes, true) +
-                        String.format(Locale.US, formatter, commonInfo.percentData * 100)
+                Utils.formatData(pref, "{M} ({%})", commonInfo.megabytes, commonInfo.percentData * 100)
         );
 
         // tweaks

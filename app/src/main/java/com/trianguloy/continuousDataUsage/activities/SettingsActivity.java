@@ -189,7 +189,8 @@ public class SettingsActivity extends Activity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
-        view_sb_decimals.setProgress(pref.getDecimals(),true);
+        view_sb_decimals.setProgress(pref.getDecimals(),false);
+        view_txt_decimals.setText(Integer.toString(pref.getDecimals()));
 
         //GB
         view_gb = findViewById(R.id.stt_chk_gb);

@@ -72,13 +72,6 @@ public class HistoryActivity extends Activity {
         }
 
         period = 0;
-        view_list.post(new Runnable() {
-            @Override
-            public void run() {
-                setPeriod();
-            }
-        });
-
     }
 
     @Override

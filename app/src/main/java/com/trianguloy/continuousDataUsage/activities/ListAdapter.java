@@ -37,12 +37,24 @@ public class ListAdapter extends BaseAdapter {
             this.usage = usage;
             this.date = date;
         }
+
+        /**
+         * @return the usage string
+         */
+        String usageString(){
+            return Utils.formatData(pref, "{0} / {M}", usage, (double) dataPerDay);
+        }
     }
 
     /**
      * Context used
      */
     private Context cntx;
+
+    /**
+     * Preferences
+     */
+    private Preferences pref;
 
     /**
      * Items in the list
@@ -56,9 +68,11 @@ public class ListAdapter extends BaseAdapter {
     private float dataPerDay;
 
     /**
-     * Dumy view to extract sizes
+     * Dummy view to extract sizes
      */
     private View dummy;
+    private TextView dummy_usage;
+    private String dummy_usage_text;
 
     //---------- Public -----------
 
@@ -69,6 +83,7 @@ public class ListAdapter extends BaseAdapter {
      */
     ListAdapter(Context cntx) {
         this.cntx = cntx;
+        this.pref = new Preferences(cntx);
     }
 
     /**
@@ -78,7 +93,14 @@ public class ListAdapter extends BaseAdapter {
      * @param date  the date of the item
      */
     void addItem(double usage, String date) {
-        itemsTemp.add(0, new Item(usage, date));
+        final Item item = new Item(usage, date);
+        itemsTemp.add(0, item);
+
+        // update max width
+        String text = item.usageString();
+        if(text.length() > dummy_usage_text.length()){
+            dummy_usage_text = text;
+        }
     }
 
     /**
@@ -86,6 +108,7 @@ public class ListAdapter extends BaseAdapter {
      */
     void clearItems() {
         itemsTemp.clear();
+        dummy_usage_text = "";
     }
 
     /**
@@ -95,9 +118,13 @@ public class ListAdapter extends BaseAdapter {
         this.dataPerDay = dataPerDay;
     }
 
-
+    /**
+     * Sets the dummy view
+     * @param dummy dummy view
+     */
     public void setDummyView(View dummy) {
         this.dummy = dummy;
+        dummy_usage = dummy.findViewById(R.id.lv_txt_usage);
     }
 
     //------------ Adapter overrides ---------------
@@ -107,6 +134,7 @@ public class ListAdapter extends BaseAdapter {
     public void notifyDataSetChanged() {
         items = itemsTemp;
         itemsTemp = new ArrayList<>();
+        dummy_usage.setText(dummy_usage_text);
         super.notifyDataSetChanged();
     }
 
@@ -127,7 +155,6 @@ public class ListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Preferences pref = new Preferences(cntx);
 
         // inflate the layout for each list row
         if (convertView == null) {
@@ -137,7 +164,7 @@ public class ListAdapter extends BaseAdapter {
             for (int id : new int[]{R.id.lv_txt_date, R.id.lv_txt_usage, R.id.lv_pgb_negative, R.id.lv_pgb_positive}) {
                 View view = convertView.findViewById(id);
                 ViewGroup.LayoutParams lp = view.getLayoutParams();
-                lp.width = dummy.findViewById(id).getWidth();
+                lp.width = dummy.findViewById(id).getMeasuredWidth();
                 view.setLayoutParams(lp);
             }
         }
@@ -153,8 +180,7 @@ public class ListAdapter extends BaseAdapter {
 
         // sets the properties
         txt_date.setText(currentItem.date);
-
-        txt_usage.setText(Utils.formatData(pref, currentItem.usage,false)+" / "+ Utils.formatData(pref, dataPerDay,true));
+        txt_usage.setText(currentItem.usageString());
 
         double rate = currentItem.usage / dataPerDay;
         if (rate > 1) {

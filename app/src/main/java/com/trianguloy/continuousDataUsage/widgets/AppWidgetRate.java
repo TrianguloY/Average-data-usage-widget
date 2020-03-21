@@ -10,8 +10,6 @@ import com.trianguloy.continuousDataUsage.common.Preferences;
 import com.trianguloy.continuousDataUsage.common.Tweaks;
 import com.trianguloy.continuousDataUsage.common.Utils;
 
-import java.util.Locale;
-
 /**
  * Implementation of the Rate widget functionality.
  * Displays a number with the rate between used_data / average_data
@@ -57,16 +55,16 @@ public class AppWidgetRate extends AppWidgetBase {
 
         //number
         double rate = commonInfo.percentData / commonInfo.percentDate;
-        views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
+        views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, "{/}", rate));
 
         // tweaks
         if (pref.getTweak(Tweaks.Items.showConsumed)) {
             rate = commonInfo.megabytes;
-            views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, rate, false));
+            views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, "{0}", rate));
         }
         if (pref.getTweak(Tweaks.Items.showAverage)) {
             rate = commonInfo.totalData;
-            views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, rate, false));
+            views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, "{0}", rate));
         }
         if (pref.getTweak(Tweaks.Items.whiteWidgets)) {
             views.setInt(R.id.wdg_parent, "setBackgroundResource", R.drawable.background_rate_white);
