@@ -8,6 +8,7 @@ import android.widget.RemoteViews;
 import com.trianguloy.continuousDataUsage.R;
 import com.trianguloy.continuousDataUsage.common.Preferences;
 import com.trianguloy.continuousDataUsage.common.Tweaks;
+import com.trianguloy.continuousDataUsage.common.Utils;
 
 import java.util.Locale;
 
@@ -16,8 +17,8 @@ import java.util.Locale;
  * Displays a number with the rate between used_data / average_data
  */
 public class AppWidgetRate extends AppWidgetBase {
-    
-    
+
+
     /**
      * Updates a widget adding its views and configuring them.
      *
@@ -26,19 +27,19 @@ public class AppWidgetRate extends AppWidgetBase {
      * @param appWidgetId      id of the widget to update
      */
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_rate);
         updateViews(context, views);
-        
+
         //update when clicking
         setOnClick(context, new int[]{appWidgetId}, views, new int[]{R.id.wdg_prgBar_data, R.id.wdg_txt_rate}, ACTION_INFO, AppWidgetRate.class);
-        
-        
+
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
-    
+
     /**
      * Updates the views of a widget
      *
@@ -49,7 +50,7 @@ public class AppWidgetRate extends AppWidgetBase {
         ReturnedInfo commonInfo = getCommonInfo(context);
         Preferences pref = new Preferences(context);
 
-        if(commonInfo.error != -1){
+        if (commonInfo.error != -1) {
             views.setTextViewText(R.id.wdg_txt_rate, context.getString(commonInfo.error));
             return;
         }
@@ -59,15 +60,15 @@ public class AppWidgetRate extends AppWidgetBase {
         views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, "%.2f", rate));
 
         // tweaks
-        if(pref.getTweak(Tweaks.Items.showConsumed)){
+        if (pref.getTweak(Tweaks.Items.showConsumed)) {
             rate = commonInfo.megabytes;
-            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, pref.getDecimalsFormatter(), rate));
+            views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, rate, false));
         }
-        if(pref.getTweak(Tweaks.Items.showAverage)){
+        if (pref.getTweak(Tweaks.Items.showAverage)) {
             rate = commonInfo.totalData;
-            views.setTextViewText(R.id.wdg_txt_rate, String.format(Locale.US, pref.getDecimalsFormatter(), rate));
+            views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, rate, false));
         }
-        if(pref.getTweak(Tweaks.Items.whiteWidgets)){
+        if (pref.getTweak(Tweaks.Items.whiteWidgets)) {
             views.setInt(R.id.wdg_parent, "setBackgroundResource", R.drawable.background_rate_white);
             views.setTextColor(R.id.wdg_txt_rate, Color.BLACK);
         }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -46,6 +47,7 @@ public class SettingsActivity extends Activity {
     private EditText view_accumulated;
     private TextView view_txt_decimals;
     private SeekBar view_sb_decimals;
+    private CheckBox view_gb;
 
 
     /**
@@ -188,6 +190,16 @@ public class SettingsActivity extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
         view_sb_decimals.setProgress(pref.getDecimals(),true);
+
+        //GB
+        view_gb = findViewById(R.id.stt_chk_gb);
+        view_gb.setChecked(pref.getGB());
+        view_gb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                pref.setGB(b);
+            }
+        });
 
         //clickable links
         for (int id : new int[]{R.id.stt_txt_perm_ps,R.id.stt_txt_perm_us} ) {

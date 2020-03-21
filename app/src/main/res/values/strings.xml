@@ -32,6 +32,8 @@
     <string name="txt_desc_setting_totalData">Total data:\nusage to show in the upper bar when totally filled. Normally your data plan limit. In megabytes (MB)</string>
     <string name="txt_desc_setting_firstDay">First day of period:\nWhen to start counting usage (day of month)</string>
     <string name="txt_settings_decimals">Decimals:\nNumber of decimals that data numbers will display.</string>
+    <string name="txt_settings_gb">MB or GB:</string>
+    <string name="chk_settings_gb">Display data in GB instead of MB.</string>
     <string name="txt_desc_setting_altConv">Alternate conversion:\nCheck this if data usage shown is always less than real usage returned by your company app. [Technical details: uses 1000 instead of 1024 to convert from bytes to megabytes]</string>
     <string name="chkbx_setting_altConv">Use alternate MB conversion</string>
     <string name="settings_mb">MB</string>

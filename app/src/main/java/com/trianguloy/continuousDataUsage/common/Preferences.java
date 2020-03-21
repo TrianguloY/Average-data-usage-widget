@@ -133,12 +133,22 @@ public class Preferences {
         return sharedPreferences.getInt(KEY_DECIMALS, DEFAULT_DECIMALS);
     }
 
-    public String getDecimalsFormatter(){
-        return "%."+getDecimals()+"f";
-    }
-
     public void setDecimals(int decimals) {
         sharedPreferences.edit().putInt(KEY_DECIMALS, decimals).apply();
+    }
+
+    /**
+     * Gigabytes (boolean)
+     */
+    private static final String KEY_GB = "gb";
+    private static final boolean DEFAULT_GB = false;
+
+    public boolean getGB() {
+        return sharedPreferences.getBoolean(KEY_GB, DEFAULT_GB);
+    }
+
+    public void setGB(boolean gb) {
+        sharedPreferences.edit().putBoolean(KEY_GB, gb).apply();
     }
 
     // ------------------- tweaks -------------------

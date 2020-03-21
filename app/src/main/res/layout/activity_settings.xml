@@ -177,6 +177,25 @@
             android:src="@color/colorAccent" />
 
         <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_settings_gb" />
+
+        <CheckBox
+            android:id="@+id/stt_chk_gb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/chk_settings_gb" />
+
+        <ImageView
+            android:id="@+id/smallSeparator7"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="@dimen/activity_margin"
+            android:src="@color/colorAccent" />
+
+        <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

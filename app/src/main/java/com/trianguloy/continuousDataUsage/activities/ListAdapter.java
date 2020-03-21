@@ -14,7 +14,6 @@ import com.trianguloy.continuousDataUsage.common.Tweaks;
 import com.trianguloy.continuousDataUsage.common.Utils;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * ListAdapter for the {@link HistoryActivity}
@@ -155,7 +154,7 @@ public class ListAdapter extends BaseAdapter {
         // sets the properties
         txt_date.setText(currentItem.date);
 
-        txt_usage.setText(String.format(Locale.US, pref.getDecimalsFormatter() + " / " + pref.getDecimalsFormatter() + " MB", currentItem.usage, dataPerDay));
+        txt_usage.setText(Utils.formatData(pref, currentItem.usage,false)+" / "+ Utils.formatData(pref, dataPerDay,true));
 
         double rate = currentItem.usage / dataPerDay;
         if (rate > 1) {
