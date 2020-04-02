@@ -14,6 +14,7 @@ output.json
 bin/
 gen/
 out/
+/app/release/release/
 
 # Gradle files
 .gradle/
