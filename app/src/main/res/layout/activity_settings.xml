@@ -156,7 +156,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/sst_txt_decimals"
+                android:id="@+id/stt_txt_decimals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -165,8 +165,7 @@
                 style="@android:style/Widget.DeviceDefault.SeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="6"
-                android:progress="2" />
+                android:max="6" />
         </LinearLayout>
 
         <ImageView
@@ -220,11 +219,23 @@
             android:layout_height="wrap_content"
             android:text="@string/txt_settings_accum" />
 
-        <CheckBox
-            android:id="@+id/stt_chkBx_accum"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/chkbx_settings_accum" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/stt_txt_savedPeriods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <SeekBar
+                android:id="@+id/stt_sb_savedPeriods"
+                style="@android:style/Widget.DeviceDefault.SeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="12" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_accum"

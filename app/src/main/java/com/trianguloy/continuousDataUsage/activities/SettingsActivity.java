@@ -46,12 +46,12 @@ public class SettingsActivity extends Activity {
     // variables
     private EditText view_accumulated;
     private TextView view_txt_decimals;
-    private SeekBar view_sb_decimals;
-    private CheckBox view_gb;
+    private TextView view_txt_savedPeriods;
 
 
     /**
      * When the activity is created, like a constructor
+     *
      * @param savedInstanceState previous saved state, used on super only
      */
     @Override
@@ -97,7 +97,7 @@ public class SettingsActivity extends Activity {
                         view_totalData.setHint(String.format(Locale.US, "%s", totalData));
                     }
                 } catch (ParseException | NullPointerException e) {
-                    Log.d("settings","numberformatexception");
+                    Log.d("settings", "numberformatexception");
                     e.printStackTrace();
                 }
             }
@@ -134,17 +134,28 @@ public class SettingsActivity extends Activity {
 
 
         //accumulate
-        final CheckBox view_accumulate = findViewById(R.id.stt_chkBx_accum);
+        SeekBar view_sb_savedPeriods = findViewById(R.id.stt_sb_savedPeriods);
+        view_txt_savedPeriods = findViewById(R.id.stt_txt_savedPeriods);
         final View view_ll = findViewById(R.id.ll_accum);
-        view_accumulate.setChecked(pref.getAccumulate());
-        view_ll.setVisibility(pref.getAccumulate() ? View.VISIBLE : View.GONE);
-        view_accumulate.setOnClickListener(new View.OnClickListener() {
+        view_sb_savedPeriods.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onClick(View view) {
-                pref.setAccumulate(view_accumulate.isChecked());
-                view_ll.setVisibility(view_accumulate.isChecked() ? View.VISIBLE : View.GONE);
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                view_txt_savedPeriods.setText(Integer.toString(i));
+                view_ll.setVisibility(i > 0 ? View.VISIBLE : View.GONE);
+                pref.setSavedPeriods(i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+        view_sb_savedPeriods.setProgress(pref.getSavedPeriods(), false); // setProgress may not update if the value is the same
+        view_txt_savedPeriods.setText(Integer.toString(pref.getSavedPeriods()));
+        view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
 
         //accumulated
         view_accumulated = findViewById(R.id.stt_edTxt_accum);
@@ -167,15 +178,15 @@ public class SettingsActivity extends Activity {
                     pref.setAccumulated(accum, new PeriodCalendar(pref.getFirstDay()).getCurrentMonth());
                     view_accumulated.setHint(String.format(Locale.US, "%s", accum));
                 } catch (ParseException | NullPointerException e) {
-                    Log.d("settings","numberformatexception");
+                    Log.d("settings", "numberformatexception");
                     e.printStackTrace();
                 }
             }
         });
 
         // decimals
-        view_txt_decimals = findViewById(R.id.sst_txt_decimals);
-        view_sb_decimals = findViewById(R.id.stt_sb_decimals);
+        view_txt_decimals = findViewById(R.id.stt_txt_decimals);
+        SeekBar view_sb_decimals = findViewById(R.id.stt_sb_decimals);
         view_sb_decimals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -184,16 +195,18 @@ public class SettingsActivity extends Activity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
-        view_sb_decimals.setProgress(pref.getDecimals(),false);
+        view_sb_decimals.setProgress(pref.getDecimals(), false); // setProgress may not update if the value is the same
         view_txt_decimals.setText(Integer.toString(pref.getDecimals()));
 
         //GB
-        view_gb = findViewById(R.id.stt_chk_gb);
+        CheckBox view_gb = findViewById(R.id.stt_chk_gb);
         view_gb.setChecked(pref.getGB());
         view_gb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -203,7 +216,7 @@ public class SettingsActivity extends Activity {
         });
 
         //clickable links
-        for (int id : new int[]{R.id.stt_txt_perm_ps,R.id.stt_txt_perm_us} ) {
+        for (int id : new int[]{R.id.stt_txt_perm_ps, R.id.stt_txt_perm_us}) {
             ((TextView) findViewById(id)).setMovementMethod(LinkMovementMethod.getInstance());
         }
 
@@ -216,7 +229,7 @@ public class SettingsActivity extends Activity {
     private void checkPermissions() {
 
         //check readPhoneState
-        setPermissionState(R.id.stt_txt_readPhone,checkSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED );
+        setPermissionState(R.id.stt_txt_readPhone, checkSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED);
 
         //check getUsageStats
         int mode = AppOpsManager.MODE_DEFAULT;
@@ -225,7 +238,7 @@ public class SettingsActivity extends Activity {
             //check permission
             mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), getPackageName());
         }
-        setPermissionState(R.id.stt_txt_usageStats,mode == AppOpsManager.MODE_ALLOWED );
+        setPermissionState(R.id.stt_txt_usageStats, mode == AppOpsManager.MODE_ALLOWED);
 
     }
 
@@ -234,22 +247,24 @@ public class SettingsActivity extends Activity {
      * Updates the specified id with the specified state.
      * state=true -> green and 'permission granted'
      * state=false -> red and 'permission needed'
+     *
      * @param textView_id id of the textview to update
-     * @param state the state
+     * @param state       the state
      */
     private void setPermissionState(int textView_id, boolean state) {
         TextView txt = findViewById(textView_id);
         txt.setText(state ? getString(R.string.txt_permissionGranted) : getString(R.string.txt_permissionsNeeded));
-        txt.setBackgroundColor(state ? Color.argb(128, 0, 255, 0) : Color.argb(128, 255, 0,0));
+        txt.setBackgroundColor(state ? Color.argb(128, 0, 255, 0) : Color.argb(128, 255, 0, 0));
     }
 
 
     /**
      * Button clicked
+     *
      * @param view which button
      */
     public void onButtonClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.stt_btn_readPhone:
                 //request 'read phone permission' button, request permission
                 requestPermissions(new String[]{"android.permission.READ_PHONE_STATE"}, 0);//"android.permission.PACKAGE_USAGE_STATS" can't be asked this way
@@ -263,7 +278,7 @@ public class SettingsActivity extends Activity {
                 //auto-calculate accumulated
                 try {
                     view_accumulated.setText(String.format(Locale.US, "%s", new DataUsage(this, pref).calculateAccumulated()));
-                }catch(DataUsage.Error e){
+                } catch (DataUsage.Error e) {
                     Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -287,13 +302,14 @@ public class SettingsActivity extends Activity {
 
     /**
      * After requesting permissions, updates views accordingly.
+     *
      * @param i not used
      * @param s not used
      * @param j not used
      */
     @Override
     public void onRequestPermissionsResult(int i, String[] s, int[] j) {
-       checkPermissions();
+        checkPermissions();
     }
 
 

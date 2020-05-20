@@ -37,9 +37,9 @@
     <string name="txt_desc_setting_altConv">Alternate conversion:\nCheck this if data usage shown is always less than real usage returned by your company app. [Technical details: uses 1000 instead of 1024 to convert from bytes to megabytes]</string>
     <string name="chkbx_setting_altConv">Use alternate MB conversion</string>
     <string name="settings_mb">MB</string>
-    <string name="txt_settings_accum">Accumulate from previous month:\nIf this is checked the unused megas from the previous month will be reduced from your current usage (will show a \'negative\' usage until then).</string>
+    <string name="txt_settings_accum">Accumulate from previous months:\nNumber of months that unused data is saved to future periods. If zero, unused data is lost when changing period. If not, the unused megas from the previous n months will be spent before the current ones (will show a \'negative\' usage until then).</string>
     <string name="chkbx_settings_accum">Accumulate</string>
-    <string name="txt_settings_accum_extra">This parameter will automatically try to be updated each period, but if you are enabling this for the first time you must enter manually the accumulated megas from the previous period (check your data provider). Alternatively you can press the button for an automatic computation (better check it afterwards). You can edit it at any time.</string>
+    <string name="txt_settings_accum_extra">This parameter will automatically try to update each period, but if you are enabling this for the first time you must enter manually the accumulated megas from the previous period (check your data provider). Alternatively you can press the button for an automatic computation (better check it afterwards). You can edit it at any time.</string>
     <string name="btn_settings_accum">Calculate</string>
 
 

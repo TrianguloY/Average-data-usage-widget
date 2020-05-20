@@ -23,6 +23,12 @@ public class Preferences {
 
     public Preferences(Context context) {
         this.sharedPreferences = context.getSharedPreferences(Preferences.PREF_NAME, Context.MODE_PRIVATE);
+
+        // updates
+        if (sharedPreferences.contains(KEY_ACCUMULATE)) {
+            setSavedPeriods(sharedPreferences.getBoolean(KEY_ACCUMULATE, false) ? 1 : 0);
+            sharedPreferences.edit().remove(KEY_ACCUMULATE).apply();
+        }
     }
 
 
@@ -87,16 +93,23 @@ public class Preferences {
 
     /**
      * Use accumulated data (boolean)
+     *
+     * @deprecated
      */
     private static final String KEY_ACCUMULATE = "accumulate";
-    private static final boolean DEFAULT_ACCUMULATE = false;
 
-    public boolean getAccumulate() {
-        return sharedPreferences.getBoolean(KEY_ACCUMULATE, DEFAULT_ACCUMULATE);
+    /**
+     * Saved Periods (int)
+     */
+    private static final String KEY_SAVEDPERIODS = "savedPeriods";
+    private static final int DEFAULT_SAVEDPERIODS = 0;
+
+    public int getSavedPeriods() {
+        return sharedPreferences.getInt(KEY_SAVEDPERIODS, DEFAULT_SAVEDPERIODS);
     }
 
-    public void setAccumulate(boolean accumulate) {
-        sharedPreferences.edit().putBoolean(KEY_ACCUMULATE, accumulate).apply();
+    public void setSavedPeriods(int savedPeriods) {
+        sharedPreferences.edit().putInt(KEY_SAVEDPERIODS, savedPeriods).apply();
     }
 
     /**

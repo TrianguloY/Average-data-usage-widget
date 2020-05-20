@@ -143,7 +143,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             DataUsage dataUsage = new DataUsage(context, pref);
             megabytes = dataUsage.getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
 
-            if(pref.getAccumulate()) {
+            if(pref.getSavedPeriods()>0) {
                 //subtract accumulated from previous period
                 double prev = dataUsage.getAccumulated();
 
