@@ -95,7 +95,7 @@ public class AppWidgetProgress extends AppWidgetBase {
         views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, Utils.dbl2int((commonInfo.percentData % 1) * progressPrecision), false);
         views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress",
                 commonInfo.percentData > 1 ? progressPrecision
-                        : commonInfo.percentData < 0 ? Utils.dbl2int((1 + commonInfo.percentData) * progressPrecision)
+                        : commonInfo.percentData < 0 ? Utils.dbl2int((1 + (commonInfo.percentData % 1)) * progressPrecision)
                         : 0);
         views.setTextViewText(R.id.wdg_txt_data,
                 Utils.formatData(pref, "{M} ({%})", commonInfo.megabytes, commonInfo.percentData * 100)
