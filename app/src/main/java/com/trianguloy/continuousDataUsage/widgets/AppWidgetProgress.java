@@ -110,6 +110,14 @@ public class AppWidgetProgress extends AppWidgetBase {
             views.setViewVisibility(R.id.wdg_txt_data, View.GONE);
             views.setViewVisibility(R.id.wdg_prgBar_data, View.GONE);
         }
+        if (pref.getTweak(Tweaks.Items.hideBars)) {
+            views.setViewVisibility(R.id.wdg_prgBar_data, View.GONE);
+            views.setViewVisibility(R.id.wdg_prgBar_date, View.GONE);
+        }
+        if (pref.getTweak(Tweaks.Items.hideTexts)) {
+            views.setViewVisibility(R.id.wdg_txt_data, View.GONE);
+            views.setViewVisibility(R.id.wdg_txt_date, View.GONE);
+        }
         if (pref.getTweak(Tweaks.Items.capNoWarp)) {
             views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, Utils.dbl2int((commonInfo.percentData) * progressPrecision), false);
             views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress", 0);

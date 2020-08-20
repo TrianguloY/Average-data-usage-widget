@@ -61,6 +61,8 @@
     <string name="btn_close">close</string>
     <string name="tweak_hideDate">Hide date bar and text (the top one)</string>
     <string name="tweak_hideData">Hide data bar and text (the bottom one)</string>
+    <string name="tweak_hideBars">Hide data and date bars</string>
+    <string name="tweak_hideTexts">Hide data and date texts</string>
     <string name="tweak_whiteWidgets">Show light-theme widgets (white background with black text)</string>
     <string name="tweak_showConsumed">Show the consumed data in the 1x1 widget (instead of the rate)</string>
     <string name="tweak_showAverage">Show the average data in the 1x1 widget (instead of the rate)</string>
