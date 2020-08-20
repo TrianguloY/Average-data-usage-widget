@@ -183,8 +183,9 @@ public class DataUsage {
         // skip if required and nothing was spent (device not configured yet)
         if (!(skipEmpty && dataInPeriod == 0)) {
 
-            //calculate accumulated
-            accum += Math.max(pref.getTotalData() - dataInPeriod, 0); // if used more, accumulated=0 (no negative)
+            // calculate accumulated
+            accum += pref.getTotalData() - dataInPeriod;
+            if (accum < 0) accum = 0; // if used more, accumulated=0 (used all, nothing saved)
             float periodsData = pref.getTotalData() * pref.getSavedPeriods();
             if (accum > periodsData) accum = periodsData; // if accumulated more than possible, cut
             skipEmpty = false;
