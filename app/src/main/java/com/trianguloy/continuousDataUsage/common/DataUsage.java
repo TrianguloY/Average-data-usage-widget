@@ -11,6 +11,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 
+import com.trianguloy.continuousDataUsage.BuildConfig;
 import com.trianguloy.continuousDataUsage.R;
 
 /**
@@ -89,6 +90,35 @@ public class DataUsage {
             Log.d("widget", "error on NetworkStatsManager");
             throw new Error(R.string.txt_widget_errorService);
         }
+
+        // update
+        updatePeriod();
+    }
+
+    /**
+     * Checks if the currently saved period and accumulated data needs update, and does so
+     */
+    public void updatePeriod(){
+        final PeriodCalendar perCal = new PeriodCalendar(pref);
+        int current = perCal.getCurrentPeriod();
+
+        if (current != 0) {
+            // new period
+
+            // update start of period
+            pref.setPeriodStart(perCal.getStartOfPeriod(current));
+            if (BuildConfig.DEBUG && perCal.getCurrentPeriod() != 0) {
+                throw new AssertionError("Current period is "+perCal.getCurrentPeriod()+", not 0!");
+            }
+
+            // calculate new accumulated data
+            try {
+                pref.setAccumulated((float) calculateAccumulated(pref.getAccumulated(), -current, false, perCal));
+            } catch (Error ignore) {
+                // can't get, just ignore
+            }
+
+        }
     }
 
     /**
@@ -138,31 +168,14 @@ public class DataUsage {
      *
      * @return the accumulated data in the previous period
      */
-    public float getAccumulated() throws Error {
-        Pair<Float, Integer> ac_mo = pref.getAccumulated();
-        float accum = ac_mo.first;
-        int month = ac_mo.second;
-
-        PeriodCalendar perCal = new PeriodCalendar(pref.getFirstDay());
-        int currentMonth = perCal.getCurrentMonth();
-
-        if (currentMonth != month) {
-
-            // new month, calculate new accumulated data
-            int diffperiod = (month - currentMonth + 12) % 12 - 12;
-            accum = (float) updateAccumulated(accum, diffperiod, false, perCal);
-
-            //save
-            pref.setAccumulated(accum, currentMonth);
-        }
-
-        return accum;
+    public float getAccumulated() {
+        return pref.getAccumulated();
     }
 
     // -----------------------------------
 
     /**
-     * Recursive function to update the accumulated data from any previous period (ignores empty)
+     * Recursive function to get the accumulated data starting from any previous period (ignores empty)
      *
      * @param accum     accumulated data in latest period
      * @param period    which latest period
@@ -171,14 +184,14 @@ public class DataUsage {
      * @return accumulated data in previous current period
      * @throws Error if can't calculate it
      */
-    private double updateAccumulated(double accum, int period, boolean skipEmpty, PeriodCalendar perCal) throws Error {
+    private double calculateAccumulated(double accum, int period, boolean skipEmpty, PeriodCalendar perCal) throws Error {
         if (period >= 0) {
             //end of recursion, final period
             return accum;
         }
 
         // onto next period
-        double dataInPeriod = getDataFromPeriod(perCal.getPeriod(period));
+        double dataInPeriod = getDataFromPeriod(perCal.getLimitsOfPeriod(period));
 
         // skip if required and nothing was spent (device not configured yet)
         if (!(skipEmpty && dataInPeriod == 0)) {
@@ -192,7 +205,7 @@ public class DataUsage {
 
         }
 
-        return updateAccumulated(accum, period + 1, skipEmpty, perCal);
+        return calculateAccumulated(accum, period + 1, skipEmpty, perCal);
     }
 
     /**
@@ -201,8 +214,8 @@ public class DataUsage {
      * @return calculated accumulated data
      * @throws Error if can't get data
      */
-    public double calculateAccumulated() throws Error {
-        return updateAccumulated(0, -12, true, new PeriodCalendar(pref.getFirstDay()));
+    public double autoCalculateAccumulated() throws Error {
+        return calculateAccumulated(0, -12, true, new PeriodCalendar(pref));
     }
 
 }

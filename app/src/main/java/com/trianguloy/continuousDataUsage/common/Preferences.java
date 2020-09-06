@@ -2,8 +2,8 @@ package com.trianguloy.continuousDataUsage.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Pair;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,10 +25,38 @@ public class Preferences {
         this.sharedPreferences = context.getSharedPreferences(Preferences.PREF_NAME, Context.MODE_PRIVATE);
 
         // updates
+        final String KEY_ACCUMULATE = "accumulate";
         if (sharedPreferences.contains(KEY_ACCUMULATE)) {
+            // accumulate=true/false -> savedPeriods=1/0
             setSavedPeriods(sharedPreferences.getBoolean(KEY_ACCUMULATE, false) ? 1 : 0);
             sharedPreferences.edit().remove(KEY_ACCUMULATE).apply();
         }
+
+        final String KEY_FIRSTDAY = "firstDay";
+        if (sharedPreferences.contains(KEY_FIRSTDAY)) {
+            // firstDay=n -> periodStart=today(day=n)
+            Calendar cal = PeriodCalendar.today();
+            cal.set(Calendar.DAY_OF_MONTH, sharedPreferences.getInt(KEY_FIRSTDAY, 0));
+            if (System.currentTimeMillis() < cal.getTimeInMillis()) {
+                cal.add(Calendar.MONTH, -1);
+            }
+            setPeriodStart(cal);
+            sharedPreferences.edit().remove(KEY_FIRSTDAY).apply();
+        }
+
+        final String KEY_ACCUMULATEDM = "accumulatedm";
+        if (sharedPreferences.contains(KEY_ACCUMULATEDM)) {
+            // accumulated month -> shift current month
+            int diff = (getPeriodStart().get(Calendar.MONTH) - sharedPreferences.getInt(KEY_ACCUMULATEDM, 0) + 12) % 12;
+            if (diff != 0) {
+                Calendar cal = getPeriodStart();
+                cal.add(Calendar.MONTH, -diff);
+                setPeriodStart(cal);
+            }
+            sharedPreferences.edit().remove(KEY_ACCUMULATEDM).apply();
+        }
+
+//        sharedPreferences.edit().clear().apply();
     }
 
 
@@ -63,17 +91,57 @@ public class Preferences {
 
 
     /**
-     * First day of period (int [1,28])
+     * Start date for current period (inclusive)
      */
-    private static final String KEY_FIRSTDAY = "firstDay";
-    private static final int DEFAULT_FIRSTDAY = 1;
+    private static final String KEY_PERIODSTART = "periodStart";
 
-    public int getFirstDay() {
-        return sharedPreferences.getInt(KEY_FIRSTDAY, DEFAULT_FIRSTDAY);
+    public Calendar getPeriodStart() {
+        Calendar cal;
+        final long millis = sharedPreferences.getLong(KEY_PERIODSTART, -1);
+        if (millis != -1) {
+            cal = Calendar.getInstance();
+            cal.setTimeInMillis(millis);
+        } else {
+            // DEFAULT: first day of current month
+            cal = PeriodCalendar.today();
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+        }
+        return cal;
     }
 
-    public void setFirstDay(int firstDay) {
-        sharedPreferences.edit().putInt(KEY_FIRSTDAY, firstDay).apply();
+    public void setPeriodStart(Calendar periodStart) {
+        sharedPreferences.edit().putLong(KEY_PERIODSTART, periodStart.getTimeInMillis()).apply();
+    }
+
+
+    /**
+     * Length of current period (int)
+     * See Period
+     */
+    private static final String KEY_PERIODLENGTH = "periodLength";
+    private static final int DEFAULT_PERIODLENGTH = 1;
+
+    public int getPeriodLength() {
+        return sharedPreferences.getInt(KEY_PERIODLENGTH, DEFAULT_PERIODLENGTH);
+    }
+
+    public void setPeriodLength(int periodLength) {
+        sharedPreferences.edit().putInt(KEY_PERIODLENGTH, periodLength).apply();
+    }
+
+    /**
+     * Type of current period (month or days)
+     * See Length
+     */
+    private static final String KEY_PERIODTYPE = "periodType";
+    private static final int DEFAULT_PERIODTYPE = Calendar.MONTH;
+
+    public int getPeriodType() {
+        return sharedPreferences.getInt(KEY_PERIODTYPE, DEFAULT_PERIODTYPE);
+    }
+
+    public void setPeriodtype(int periodType) {
+        sharedPreferences.edit().putInt(KEY_PERIODTYPE, periodType).apply();
     }
 
     /**
@@ -91,12 +159,6 @@ public class Preferences {
         return b;
     }
 
-    /**
-     * Use accumulated data (boolean)
-     *
-     * @deprecated
-     */
-    private static final String KEY_ACCUMULATE = "accumulate";
 
     /**
      * Saved Periods (int)
@@ -113,27 +175,17 @@ public class Preferences {
     }
 
     /**
-     * Accumulated data (float)
-     * and
-     * Month (integer)
+     * Accumulated data of current period (float)
      */
     private static final String KEY_ACCUMULATED = "accumulated";
-    private static final String KEY_ACCUMULATEDM = "accumulatedm";
     private static final float DEFAULT_ACCUMULATED = 0;
-    private static final int DEFAULT_ACCUMULATEDM = 0;
 
-    public Pair<Float, Integer> getAccumulated() {
-        return new Pair<>(
-                sharedPreferences.getFloat(KEY_ACCUMULATED, DEFAULT_ACCUMULATED),
-                sharedPreferences.getInt(KEY_ACCUMULATEDM, DEFAULT_ACCUMULATEDM)
-        );
+    public Float getAccumulated() {
+        return sharedPreferences.getFloat(KEY_ACCUMULATED, DEFAULT_ACCUMULATED);
     }
 
-    public void setAccumulated(float accumulated, int month) {
-        sharedPreferences.edit()
-                .putFloat(KEY_ACCUMULATED, accumulated)
-                .putInt(KEY_ACCUMULATEDM, month)
-                .apply();
+    public void setAccumulated(float accumulated) {
+        sharedPreferences.edit().putFloat(KEY_ACCUMULATED, accumulated).apply();
     }
 
     /**

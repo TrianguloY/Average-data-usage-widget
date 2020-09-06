@@ -40,7 +40,7 @@
             android:id="@+id/stt_btn_readPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onButtonClick"
+            android:onClick="onClick"
             android:text="@string/btn_permission_phoneState" />
 
         <ImageView
@@ -67,7 +67,7 @@
             android:id="@+id/stt_btn_usageStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onButtonClick"
+            android:onClick="onClick"
             android:text="@string/btn_permission_usageStats" />
 
         <ImageView
@@ -106,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:gravity="center"
                 android:inputType="numberDecimal" />
 
             <TextView
@@ -129,13 +130,48 @@
             android:id="@+id/textView8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/txt_desc_setting_firstDay" />
+            android:text="@string/txt_desc_setting_periodInfo" />
 
-        <Spinner
-            android:id="@+id/stt_spn_firstDay"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dialog" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/stt_txt_periodLength"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="right|center_vertical"
+                android:inputType="number" />
+
+            <Spinner
+                android:id="@+id/stt_spn_periodType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:spinnerMode="dialog" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_desc_setting_periodStart" />
+
+        <EditText
+            android:id="@+id/stt_txt_periodStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="date"
+            android:onClick="onClick" />
 
         <ImageView
             android:id="@+id/smallSeparator5"
@@ -262,6 +298,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
+                    android:gravity="center"
                     android:inputType="numberDecimal" />
 
                 <TextView
@@ -276,7 +313,7 @@
                     android:id="@+id/stt_btn_accum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onButtonClick"
+                    android:onClick="onClick"
                     android:text="@string/btn_settings_accum" />
             </LinearLayout>
 
@@ -299,7 +336,7 @@
             android:id="@+id/stt_btn_tweaks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onButtonClick"
+            android:onClick="onClick"
             android:text="@string/btn_tweaks" />
 
         <Space

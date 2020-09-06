@@ -15,7 +15,7 @@
             android:id="@+id/h_btn_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onButtonClick"
+            android:onClick="onClick"
             android:text="@string/btn_left" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:id="@+id/h_btn_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onButtonClick"
+            android:onClick="onClick"
             android:text="@string/btn_right" />
     </LinearLayout>
 

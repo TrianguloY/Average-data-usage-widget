@@ -55,7 +55,7 @@ public class Main extends Activity {
      * A button is clicked
      * @param view which one
      */
-    public void onButtonClick(View view){
+    public void onClick(View view){
         switch (view.getId()){
             case R.id.m_btn_history:
                 //open history

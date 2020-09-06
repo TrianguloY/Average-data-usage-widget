@@ -53,7 +53,7 @@ public class HistoryActivity extends Activity {
         setContentView(R.layout.activity_history);
 
         pref = new Preferences(this);
-        periodCalendar = new PeriodCalendar(pref.getFirstDay());
+        periodCalendar = new PeriodCalendar(pref);
         adapter = new ListAdapter(this);
 
         ListView view_list = findViewById(R.id.h_lv_list);
@@ -86,7 +86,7 @@ public class HistoryActivity extends Activity {
         return true;
     }
 
-    public void onButtonClick(View view){
+    public void onClick(View view){
         switch(view.getId()){
             case R.id.h_btn_left:
                 period--;
@@ -147,7 +147,7 @@ public class HistoryActivity extends Activity {
 
 
         //get to
-        to.add(Calendar.MONTH, 1);
+        to.add(pref.getPeriodType(), pref.getPeriodLength());
         to.add(Calendar.DAY_OF_MONTH, -1);
         String monthTo = title_format.format(to.getTime());
 

@@ -2,6 +2,7 @@ package com.trianguloy.continuousDataUsage.activities;
 
 import android.app.Activity;
 import android.app.AppOpsManager;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -32,7 +34,10 @@ import com.trianguloy.continuousDataUsage.common.Tweaks;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -47,6 +52,7 @@ public class SettingsActivity extends Activity {
     private EditText view_accumulated;
     private TextView view_txt_decimals;
     private TextView view_txt_savedPeriods;
+    private EditText txt_periodStart;
 
 
     /**
@@ -103,22 +109,54 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        //firstDay
-        Spinner view_firstDay = findViewById(R.id.stt_spn_firstDay);
-        final Integer[] days = new Integer[28];
-        for (int i = 0; i < 28; i++) {
-            days[i] = i + 1;
-        }
-        view_firstDay.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, days));
-        view_firstDay.setSelection(Arrays.binarySearch(days, pref.getFirstDay()));
-        view_firstDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // periodStart
+        txt_periodStart = findViewById(R.id.stt_txt_periodStart);
+        final Calendar periodStart = pref.getPeriodStart();
+        txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(periodStart.getTime()));
+
+        // period amount
+        final EditText txt_periodLength = findViewById(R.id.stt_txt_periodLength);
+        txt_periodLength.setText(String.format(Locale.US, "%s", pref.getPeriodLength()));
+        txt_periodLength.setHint(txt_periodLength.getText());
+        txt_periodLength.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {
+                    int length = NumberFormat.getInstance(Locale.US).parse(editable.toString()).intValue();
+                    if (length > 0) {
+                        //valid total data, save
+                        pref.setPeriodLength(length);
+                        txt_periodLength.setHint(String.format(Locale.US, "%s", length));
+                    }
+                } catch (ParseException | NullPointerException e) {
+                    Log.d("settings", "numberformatexception");
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // period type
+        final Spinner spn_periodType = findViewById(R.id.stt_spn_periodType);
+        final List<Integer> periodTypes = Arrays.asList(Calendar.DAY_OF_MONTH, Calendar.MONTH);
+        spn_periodType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{getString(R.string.days), getString(R.string.months)}));
+        spn_periodType.setSelection(periodTypes.indexOf(pref.getPeriodType()));
+        spn_periodType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                pref.setFirstDay(days[i]);
+                pref.setPeriodtype(periodTypes.get(i));
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                pref.setPeriodtype(periodTypes.get(0));
             }
         });
 
@@ -131,7 +169,6 @@ public class SettingsActivity extends Activity {
                 pref.setAltConversion(view_alternateConversion.isChecked());
             }
         });
-
 
         //accumulate
         SeekBar view_sb_savedPeriods = findViewById(R.id.stt_sb_savedPeriods);
@@ -159,7 +196,7 @@ public class SettingsActivity extends Activity {
 
         //accumulated
         view_accumulated = findViewById(R.id.stt_edTxt_accum);
-        view_accumulated.setText(String.format(Locale.US, "%s", pref.getAccumulated().first));
+        view_accumulated.setText(String.format(Locale.US, "%s", pref.getAccumulated()));
         view_accumulated.setHint(view_accumulated.getText());
         view_accumulated.addTextChangedListener(new TextWatcher() {
             @Override
@@ -175,7 +212,7 @@ public class SettingsActivity extends Activity {
                 try {
                     float accum = NumberFormat.getInstance(Locale.US).parse(editable.toString()).floatValue();
 
-                    pref.setAccumulated(accum, new PeriodCalendar(pref.getFirstDay()).getCurrentMonth());
+                    pref.setAccumulated(accum);
                     view_accumulated.setHint(String.format(Locale.US, "%s", accum));
                 } catch (ParseException | NullPointerException e) {
                     Log.d("settings", "numberformatexception");
@@ -263,7 +300,7 @@ public class SettingsActivity extends Activity {
      *
      * @param view which button
      */
-    public void onButtonClick(View view) {
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.stt_btn_readPhone:
                 //request 'read phone permission' button, request permission
@@ -274,10 +311,15 @@ public class SettingsActivity extends Activity {
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
                 break;
 
+            case R.id.stt_txt_periodStart:
+                // start date picker
+                pickPeriodStart();
+                break;
+
             case R.id.stt_btn_accum:
                 //auto-calculate accumulated
                 try {
-                    view_accumulated.setText(String.format(Locale.US, "%s", new DataUsage(this, pref).calculateAccumulated()));
+                    view_accumulated.setText(String.format(Locale.US, "%s", new DataUsage(this, pref).autoCalculateAccumulated()));
                 } catch (DataUsage.Error e) {
                     Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                 }
@@ -287,6 +329,27 @@ public class SettingsActivity extends Activity {
                 new Tweaks(pref, this).showDialog();
                 break;
         }
+    }
+
+    /**
+     * Shows a date dialog to change the start date
+     */
+    private void pickPeriodStart() {
+        final DatePickerDialog dialog = new DatePickerDialog(this);
+        dialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                // new date
+                final Calendar cal = PeriodCalendar.from(year, month, day);
+                txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(cal.getTime()));
+                pref.setPeriodStart(cal);
+            }
+        });
+        // set
+        final Calendar cal = pref.getPeriodStart();
+        dialog.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        // show
+        dialog.show();
     }
 
 

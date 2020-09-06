@@ -5,76 +5,107 @@ import android.util.Pair;
 import java.util.Calendar;
 
 /**
- * Calendar-related functions
+ * Calendar-related functions, manages a period
  */
 public class PeriodCalendar {
 
-    /**
-     * First day of the period
-     */
-    private int firstDay;
+    private final Preferences pref;
 
     /**
      * Constructor
-     * @param firstDay first day of the period
+     *
+     * @param pref preferences to get info about saved period
      */
-    public PeriodCalendar(int firstDay) {
-        this.firstDay = firstDay;
+    public PeriodCalendar(Preferences pref) {
+        this.pref = pref;
     }
 
     /**
      * Returns the start and end millis of the specified period
+     *
      * @param period 0 for current, -1 for previous, -2 for two previous...
      * @return start&end millis pair
      */
-    public Pair<Long, Long> getPeriod(int period){
+    public Pair<Long, Long> getLimitsOfPeriod(int period) {
 
         Calendar cal = getStartOfPeriod(period);
 
         // get start of the period
         long startOfPeriod = cal.getTimeInMillis();
 
-        //get end of period
-        cal.add(Calendar.MONTH, 1);
+        // get end of period
+        cal.add(pref.getPeriodType(), pref.getPeriodLength());
         long endOfPeriod = cal.getTimeInMillis();
 
         return new Pair<>(startOfPeriod, endOfPeriod);
     }
 
     /**
-     * @return the month of the start of current period
+     * @return the current period based on the saved prefs.
+     * Almost always 0
+     * 1 (or more) when period changes
+     * -1 or less when time travel
      */
-    public int getCurrentMonth(){
-        return getStartOfPeriod(0).get(Calendar.MONTH);
+    public int getCurrentPeriod() {
+        int period = 0;
+
+        long now = System.currentTimeMillis();
+
+        while (true) {
+            final Pair<Long, Long> limits = getLimitsOfPeriod(period);
+            if (limits.first <= now && now < limits.second) return period;
+            if (now >= limits.second) period++;
+            if (now < limits.first) period--;
+        }
     }
 
 
     // ----------------
 
     /**
-     * @return a calendar at the start of the specified period
      * @param period 0 for current, -1 for previous...
+     * @return a calendar at the start of the specified period
      */
-    public Calendar getStartOfPeriod(int period){
-        //current
-        long currentMillis = System.currentTimeMillis();
+    public Calendar getStartOfPeriod(int period) {
+        Calendar cal = pref.getPeriodStart();
 
-        //date
+        // goto period wanted
+        while (period > 0) {
+            // add length for future period
+            cal.add(pref.getPeriodType(), pref.getPeriodLength());
+            period--;
+        }
+        while (period < 0) {
+            // substract length for past (or current) period
+            cal.add(pref.getPeriodType(), -pref.getPeriodLength());
+            period++;
+        }
+
+        return cal;
+    }
+
+    // ------------------- static -------------------
+
+    /**
+     * @return today as a calendar
+     */
+    public static Calendar today() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+        return cal;
+    }
 
-        // goto start of period 0
-        cal.set(Calendar.DAY_OF_MONTH, firstDay);
-        if (currentMillis < cal.getTimeInMillis()) {
-            cal.add(Calendar.MONTH, -1);
-        }
-
-        // goto period wanted
-        cal.add(Calendar.MONTH, period);
-
+    /**
+     * @return A calendar from a @param year, @param month and @param day
+     */
+    public static Calendar from(int year, int month, int day) {
+        Calendar cal = today();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
         return cal;
     }
 }

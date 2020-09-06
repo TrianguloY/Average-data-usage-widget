@@ -26,7 +26,7 @@
                 android:layout_weight="1"
                 android:drawableStart="@drawable/ic_history"
                 android:drawableTint="#AAAAAA"
-                android:onClick="onButtonClick"
+                android:onClick="onClick"
                 android:text="@string/h_title" />
 
             <Button
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableStart="@android:drawable/ic_menu_manage"
-                android:onClick="onButtonClick"
+                android:onClick="onClick"
                 android:text="@string/s_title" />
         </LinearLayout>
 
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
-            android:onClick="onButtonClick">
+            android:onClick="onClick">
 
         </com.trianguloy.continuousDataUsage.common.NonTouchableView>
 

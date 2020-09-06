@@ -123,8 +123,8 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         long currentMillis = System.currentTimeMillis();
 
         //current period
-        PeriodCalendar periodCalendar = new PeriodCalendar(pref.getFirstDay());
-        Pair<Long, Long> val = periodCalendar.getPeriod(0);
+        PeriodCalendar periodCalendar = new PeriodCalendar(pref);
+        Pair<Long, Long> val = periodCalendar.getLimitsOfPeriod(0);
         long startOfPeriod = val.first;
         long endOfPeriod = val.second;
 
@@ -144,7 +144,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             megabytes = dataUsage.getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
 
             if(pref.getSavedPeriods()>0) {
-                //subtract accumulated from previous period
+                // subtract accumulated from previous period
                 double prev = dataUsage.getAccumulated();
 
                 if (prev > 0)
