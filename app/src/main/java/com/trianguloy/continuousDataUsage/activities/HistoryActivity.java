@@ -33,14 +33,15 @@ import java.util.Locale;
  */
 public class HistoryActivity extends Activity {
 
+    // objects
     private ListAdapter adapter;
     private PeriodCalendar periodCalendar;
     private DataUsage dataUsage;
     private Preferences pref;
 
-    private TextView view_title;
-
+    // variables
     private int period;
+    private TextView view_title;
     private ProgressBar view_loading;
     private Button view_right;
     private final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
@@ -52,21 +53,25 @@ public class HistoryActivity extends Activity {
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_history);
 
+        // initialize objects
         pref = new Preferences(this);
         periodCalendar = new PeriodCalendar(pref);
         adapter = new ListAdapter(this);
 
+        // get views
         ListView view_list = findViewById(R.id.h_lv_list);
         view_title = findViewById(R.id.h_tv_title);
         view_loading = findViewById(R.id.h_pb_loading);
         view_right = findViewById(R.id.h_btn_right);
 
+        // initialize elements
         view_list.setAdapter(adapter);
         adapter.setDummyView(findViewById(R.id.h_item_dummy));
 
         try{
             dataUsage = new DataUsage(this, pref);
         }catch (DataUsage.Error e){
+            // can't open, probably no permission
             Toast.makeText(this, e.errorId, Toast.LENGTH_LONG).show();
             finish();
         }
@@ -77,6 +82,7 @@ public class HistoryActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        // When resumed, reload period
         setPeriod();
     }
 
@@ -89,10 +95,12 @@ public class HistoryActivity extends Activity {
     public void onClick(View view){
         switch(view.getId()){
             case R.id.h_btn_left:
+                // decrement period
                 period--;
                 setPeriod();
                 break;
             case R.id.h_btn_right:
+                // increment period (if possible)
                 if(period < 0) {
                     period++;
                     setPeriod();
@@ -135,6 +143,7 @@ public class HistoryActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    // reload period
     public void setPeriod() {
 
         //init variables

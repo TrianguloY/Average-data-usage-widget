@@ -24,16 +24,16 @@ import java.util.Calendar;
  * Implementation of App Widget functionality. Base class.
  */
 abstract class AppWidgetBase extends AppWidgetProvider {
-    
+
     //abstract
     abstract void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId);
-    
+
     private static final String EXTRA_ACTION = "cdu_action";
     static final int ACTION_REFRESH = 0;
     static final int ACTION_USAGE = 1;
     static final int ACTION_INFO = 2;
-    
-    
+
+
     /**
      * When a widget is created for the first time. Nothing done.
      *
@@ -42,8 +42,8 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
     }
-    
-    
+
+
     /**
      * When the last widget is removed. Nothing done
      *
@@ -52,8 +52,8 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
     }
-    
-    
+
+
     /**
      * Called when one or more widgets needs to be updated. Updates all of them
      *
@@ -67,12 +67,13 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
-    
-    
+
+
     /**
      * Intent received, act accordingly.
+     *
      * @param context that magical class
-     * @param intent the intent
+     * @param intent  the intent
      */
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -95,7 +96,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     /**
      * To return a bundle with multiple values in the #getCommonInfo function
      */
-    static class ReturnedInfo{
+    static class ReturnedInfo {
         double percentDate = 0;
         double totalData = 0;
 
@@ -107,10 +108,11 @@ abstract class AppWidgetBase extends AppWidgetProvider {
 
     /**
      * The core of the widgets, calculates the necessary data
+     *
      * @param context not to be confused with contest
      * @return calculated data in a packed class
      */
-    static ReturnedInfo getCommonInfo(Context context){
+    static ReturnedInfo getCommonInfo(Context context) {
 
         ReturnedInfo returnedInfo = new ReturnedInfo();
 
@@ -143,7 +145,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             DataUsage dataUsage = new DataUsage(context, pref);
             megabytes = dataUsage.getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
 
-            if(pref.getSavedPeriods()>0) {
+            if (pref.getSavedPeriods() > 0) {
                 // subtract accumulated from previous period
                 double prev = dataUsage.getAccumulated();
 
@@ -152,7 +154,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
                 //if(megabytes<0)megabytes=0;
             }
 
-        }catch (DataUsage.Error e){
+        } catch (DataUsage.Error e) {
             returnedInfo.error = e.errorId;
             return returnedInfo;
         }
@@ -186,19 +188,17 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     }
 
 
-
-
-
     //--------------utils-------------------
-    
-    
+
+
     /**
      * Puts the updateWidget click event on the specific views
-     * @param context base context
-     * @param appWidgetIds ids to update
-     * @param remoteViews where to find the views
-     * @param views views to set
-     * @param action intent action
+     *
+     * @param context        base context
+     * @param appWidgetIds   ids to update
+     * @param remoteViews    where to find the views
+     * @param views          views to set
+     * @param action         intent action
      * @param classForIntent class for the intent
      */
     static void setOnClick(Context context, int[] appWidgetIds, RemoteViews remoteViews, int[] views, int action, Class<?> classForIntent) {
@@ -214,6 +214,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
 
     /**
      * Converts millis to a string display
+     *
      * @param millis mililiseconds of a specific time
      * @return the time as string
      */

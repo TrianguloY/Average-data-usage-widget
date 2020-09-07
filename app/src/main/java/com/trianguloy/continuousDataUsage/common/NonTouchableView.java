@@ -5,6 +5,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
+/**
+ * A view that removes all touches
+ */
 public class NonTouchableView extends FrameLayout {
 
     public NonTouchableView(Context context) {

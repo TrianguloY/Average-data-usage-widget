@@ -22,7 +22,7 @@ public class DataUsage {
     /**
      * Returned when calling a function
      */
-    public class Error extends Exception {
+    public static class Error extends Exception {
         /**
          * The id of the string resource with the error
          */
@@ -164,7 +164,6 @@ public class DataUsage {
 
     /**
      * Returns the accumulated data from the previous period.
-     * Reads the saved setting, and updates it if necessary
      *
      * @return the accumulated data in the previous period
      */
