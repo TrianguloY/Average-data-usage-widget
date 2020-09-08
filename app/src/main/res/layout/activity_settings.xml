@@ -16,6 +16,10 @@
         android:orientation="vertical"
         tools:context="com.trianguloy.continuousDataUsage.activities.SettingsActivity">
 
+        <requestFocus
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
@@ -143,15 +147,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:gravity="right|center_vertical"
+                android:gravity="center"
                 android:inputType="number" />
 
             <Spinner
                 android:id="@+id/stt_spn_periodType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:spinnerMode="dialog" />
         </LinearLayout>
 

@@ -105,6 +105,7 @@ public class Preferences {
             // DEFAULT: first day of current month
             cal = PeriodCalendar.today();
             cal.set(Calendar.DAY_OF_MONTH, 1);
+            setPeriodStart(cal); // save, otherwise it will never be updated
         }
         return cal;
     }

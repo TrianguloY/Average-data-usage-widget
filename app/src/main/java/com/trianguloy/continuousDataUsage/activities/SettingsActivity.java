@@ -323,6 +323,8 @@ public class SettingsActivity extends Activity {
                 } catch (DataUsage.Error e) {
                     Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                 }
+                // update if nececesary
+                txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(pref.getPeriodStart().getTime()));
                 break;
             case R.id.stt_btn_tweaks:
                 // show tweaks
