@@ -110,12 +110,12 @@ public class SettingsActivity extends Activity {
         });
 
         // periodStart
-        txt_periodStart = findViewById(R.id.stt_txt_periodStart);
+        txt_periodStart = findViewById(R.id.stt_edTxt_periodStart);
         final Calendar periodStart = pref.getPeriodStart();
         txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(periodStart.getTime()));
 
         // period amount
-        final EditText txt_periodLength = findViewById(R.id.stt_txt_periodLength);
+        final EditText txt_periodLength = findViewById(R.id.stt_edTxt_periodLength);
         txt_periodLength.setText(String.format(Locale.US, "%s", pref.getPeriodLength()));
         txt_periodLength.setHint(txt_periodLength.getText());
         txt_periodLength.addTextChangedListener(new TextWatcher() {
@@ -171,28 +171,37 @@ public class SettingsActivity extends Activity {
         });
 
         //accumulate
-        SeekBar view_sb_savedPeriods = findViewById(R.id.stt_sb_savedPeriods);
-        view_txt_savedPeriods = findViewById(R.id.stt_txt_savedPeriods);
         final View view_ll = findViewById(R.id.ll_accum);
-        view_sb_savedPeriods.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        final EditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
+        view_sb_savedPeriods.setText(String.format(Locale.US, "%s", pref.getSavedPeriods()));
+        view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
+        view_sb_savedPeriods.setHint(view_sb_savedPeriods.getText());
+        view_sb_savedPeriods.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                view_txt_savedPeriods.setText(Integer.toString(i));
-                view_ll.setVisibility(i > 0 ? View.VISIBLE : View.GONE);
-                pref.setSavedPeriods(i);
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void afterTextChanged(Editable editable) {
+                try {
+                    int value = NumberFormat.getInstance(Locale.US).parse(editable.toString()).intValue();
+                    if (value >= 0) {
+                        //valid total data, save
+                        pref.setSavedPeriods(value);
+                        view_sb_savedPeriods.setHint(String.format(Locale.US, "%s", value));
+                        view_ll.setVisibility(value > 0 ? View.VISIBLE : View.GONE);
+                    }
+                } catch (ParseException | NullPointerException e) {
+                    Log.d("settings", "numberformatexception");
+                    e.printStackTrace();
+                }
             }
         });
-        view_sb_savedPeriods.setProgress(pref.getSavedPeriods(), false); // setProgress may not update if the value is the same
-        view_txt_savedPeriods.setText(Integer.toString(pref.getSavedPeriods()));
-        view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
+
 
         //accumulated
         view_accumulated = findViewById(R.id.stt_edTxt_accum);
@@ -311,7 +320,7 @@ public class SettingsActivity extends Activity {
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
                 break;
 
-            case R.id.stt_txt_periodStart:
+            case R.id.stt_edTxt_periodStart:
                 // start date picker
                 pickPeriodStart();
                 break;

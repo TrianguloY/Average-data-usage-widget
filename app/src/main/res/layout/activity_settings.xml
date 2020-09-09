@@ -142,7 +142,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/stt_txt_periodLength"
+                android:id="@+id/stt_edTxt_periodLength"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -167,7 +167,7 @@
             android:text="@string/txt_desc_setting_periodStart" />
 
         <EditText
-            android:id="@+id/stt_txt_periodStart"
+            android:id="@+id/stt_edTxt_periodStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -260,23 +260,14 @@
             android:layout_height="wrap_content"
             android:text="@string/txt_settings_accum" />
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/stt_edTxt_savedPeriods"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/stt_txt_savedPeriods"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <SeekBar
-                android:id="@+id/stt_sb_savedPeriods"
-                style="@android:style/Widget.DeviceDefault.SeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="12" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number" />
 
         <LinearLayout
             android:id="@+id/ll_accum"
