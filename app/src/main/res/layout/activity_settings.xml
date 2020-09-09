@@ -104,7 +104,7 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <EditText
+            <com.trianguloy.continuousDataUsage.common.NumericEditText
                 android:id="@+id/stt_edTxt_totalData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
+            <com.trianguloy.continuousDataUsage.common.NumericEditText
                 android:id="@+id/stt_edTxt_periodLength"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -260,7 +260,7 @@
             android:layout_height="wrap_content"
             android:text="@string/txt_settings_accum" />
 
-        <EditText
+        <com.trianguloy.continuousDataUsage.common.NumericEditText
             android:id="@+id/stt_edTxt_savedPeriods"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -288,7 +288,7 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.trianguloy.continuousDataUsage.common.NumericEditText
                     android:id="@+id/stt_edTxt_accum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

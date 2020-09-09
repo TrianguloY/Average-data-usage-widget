@@ -10,10 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.Settings;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,17 +25,15 @@ import android.widget.Toast;
 
 import com.trianguloy.continuousDataUsage.R;
 import com.trianguloy.continuousDataUsage.common.DataUsage;
+import com.trianguloy.continuousDataUsage.common.NumericEditText;
 import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
 import com.trianguloy.continuousDataUsage.common.Tweaks;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Main activity: settings
@@ -49,9 +44,8 @@ public class SettingsActivity extends Activity {
     private Preferences pref = null;
 
     // variables
-    private EditText view_accumulated;
+    private NumericEditText view_accumulated;
     private TextView view_txt_decimals;
-    private TextView view_txt_savedPeriods;
     private EditText txt_periodStart;
 
 
@@ -80,32 +74,12 @@ public class SettingsActivity extends Activity {
      */
     private void initialize() {
 
-        //totaldata
-        final EditText view_totalData = findViewById(R.id.stt_edTxt_totalData);
-        view_totalData.setText(String.format(Locale.US, "%s", pref.getTotalData()));
-        view_totalData.setHint(view_totalData.getText());
-        view_totalData.addTextChangedListener(new TextWatcher() {
+        // totaldata
+        final NumericEditText view_totalData = findViewById(R.id.stt_edTxt_totalData);
+        view_totalData.initFloat(false, pref.getTotalData(), new NumericEditText.OnNewFloatListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try {
-                    float totalData = NumberFormat.getInstance(Locale.US).parse(editable.toString()).floatValue();
-                    if (totalData > 0) {
-                        //valid total data, save
-                        pref.setTotalData(totalData);
-                        view_totalData.setHint(String.format(Locale.US, "%s", totalData));
-                    }
-                } catch (ParseException | NullPointerException e) {
-                    Log.d("settings", "numberformatexception");
-                    e.printStackTrace();
-                }
+            public void newNumber(float number) {
+                pref.setTotalData(number);
             }
         });
 
@@ -115,31 +89,11 @@ public class SettingsActivity extends Activity {
         txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(periodStart.getTime()));
 
         // period amount
-        final EditText txt_periodLength = findViewById(R.id.stt_edTxt_periodLength);
-        txt_periodLength.setText(String.format(Locale.US, "%s", pref.getPeriodLength()));
-        txt_periodLength.setHint(txt_periodLength.getText());
-        txt_periodLength.addTextChangedListener(new TextWatcher() {
+        final NumericEditText txt_periodLength = findViewById(R.id.stt_edTxt_periodLength);
+        txt_periodLength.initInt(false, pref.getPeriodLength(), new NumericEditText.OnNewIntListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try {
-                    int length = NumberFormat.getInstance(Locale.US).parse(editable.toString()).intValue();
-                    if (length > 0) {
-                        //valid total data, save
-                        pref.setPeriodLength(length);
-                        txt_periodLength.setHint(String.format(Locale.US, "%s", length));
-                    }
-                } catch (ParseException | NullPointerException e) {
-                    Log.d("settings", "numberformatexception");
-                    e.printStackTrace();
-                }
+            public void newNumber(int number) {
+                pref.setPeriodLength(number);
             }
         });
 
@@ -170,63 +124,25 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        //accumulate
+        // accumulated periods
+        final NumericEditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
         final View view_ll = findViewById(R.id.ll_accum);
-        final EditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
-        view_sb_savedPeriods.setText(String.format(Locale.US, "%s", pref.getSavedPeriods()));
         view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
-        view_sb_savedPeriods.setHint(view_sb_savedPeriods.getText());
-        view_sb_savedPeriods.addTextChangedListener(new TextWatcher() {
+        view_sb_savedPeriods.initInt(true, pref.getSavedPeriods(), new NumericEditText.OnNewIntListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try {
-                    int value = NumberFormat.getInstance(Locale.US).parse(editable.toString()).intValue();
-                    if (value >= 0) {
-                        //valid total data, save
-                        pref.setSavedPeriods(value);
-                        view_sb_savedPeriods.setHint(String.format(Locale.US, "%s", value));
-                        view_ll.setVisibility(value > 0 ? View.VISIBLE : View.GONE);
-                    }
-                } catch (ParseException | NullPointerException e) {
-                    Log.d("settings", "numberformatexception");
-                    e.printStackTrace();
-                }
+            public void newNumber(int number) {
+                pref.setSavedPeriods(number);
+                view_ll.setVisibility(number > 0 ? View.VISIBLE : View.GONE);
             }
         });
 
 
-        //accumulated
+        // accumulated megas
         view_accumulated = findViewById(R.id.stt_edTxt_accum);
-        view_accumulated.setText(String.format(Locale.US, "%s", pref.getAccumulated()));
-        view_accumulated.setHint(view_accumulated.getText());
-        view_accumulated.addTextChangedListener(new TextWatcher() {
+        view_accumulated.initFloat(true, pref.getAccumulated(), new NumericEditText.OnNewFloatListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try {
-                    float accum = NumberFormat.getInstance(Locale.US).parse(editable.toString()).floatValue();
-
-                    pref.setAccumulated(accum);
-                    view_accumulated.setHint(String.format(Locale.US, "%s", accum));
-                } catch (ParseException | NullPointerException e) {
-                    Log.d("settings", "numberformatexception");
-                    e.printStackTrace();
-                }
+            public void newNumber(float number) {
+                pref.setAccumulated(number);
             }
         });
 
@@ -328,7 +244,7 @@ public class SettingsActivity extends Activity {
             case R.id.stt_btn_accum:
                 //auto-calculate accumulated
                 try {
-                    view_accumulated.setText(String.format(Locale.US, "%s", new DataUsage(this, pref).autoCalculateAccumulated()));
+                    view_accumulated.setValue((float) new DataUsage(this, pref).autoCalculateAccumulated());
                 } catch (DataUsage.Error e) {
                     Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                 }
