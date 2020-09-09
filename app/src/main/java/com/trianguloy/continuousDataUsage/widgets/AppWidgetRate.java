@@ -58,15 +58,15 @@ public class AppWidgetRate extends AppWidgetBase {
         views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, "{/}", rate));
 
         // tweaks
-        if (pref.getTweak(Tweaks.Items.showConsumed)) {
+        if (pref.getTweak(Tweaks.Tweak.showConsumed)) {
             rate = commonInfo.megabytes;
             views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, "{0}", rate));
         }
-        if (pref.getTweak(Tweaks.Items.showAverage)) {
+        if (pref.getTweak(Tweaks.Tweak.showAverage)) {
             rate = commonInfo.totalData;
             views.setTextViewText(R.id.wdg_txt_rate, Utils.formatData(pref, "{0}", rate));
         }
-        if (pref.getTweak(Tweaks.Items.whiteWidgets)) {
+        if (pref.getTweak(Tweaks.Tweak.whiteWidgets)) {
             views.setInt(R.id.wdg_parent, "setBackgroundResource", R.drawable.background_rate_white);
             views.setTextColor(R.id.wdg_txt_rate, Color.BLACK);
         }

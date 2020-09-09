@@ -196,7 +196,7 @@ public class ListAdapter extends BaseAdapter {
         }
 
         // tweaks
-        if (pref.getTweak(Tweaks.Items.capNoWarp) && pgb_positive.getSecondaryProgress() > 0) {
+        if (pref.getTweak(Tweaks.Tweak.capNoWarp) && pgb_positive.getSecondaryProgress() > 0) {
             // cap
             pgb_positive.setProgress(pgb_positive.getMax());
             pgb_positive.setSecondaryProgress(0);

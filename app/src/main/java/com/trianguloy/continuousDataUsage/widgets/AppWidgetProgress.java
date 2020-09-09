@@ -91,7 +91,7 @@ public class AppWidgetProgress extends AppWidgetBase {
             return;
         }
 
-        //bottom bar
+        // bottom bar
         views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, Utils.dbl2int((commonInfo.percentData % 1) * progressPrecision), false);
         views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress",
                 commonInfo.percentData > 1 ? progressPrecision
@@ -102,27 +102,47 @@ public class AppWidgetProgress extends AppWidgetBase {
         );
 
         // tweaks
-        if (pref.getTweak(Tweaks.Items.hideDate)) {
+        if (pref.getTweak(Tweaks.Tweak.hideDate)) {
             views.setViewVisibility(R.id.wdg_txt_date, View.GONE);
             views.setViewVisibility(R.id.wdg_prgBar_date, View.GONE);
         }
-        if (pref.getTweak(Tweaks.Items.hideData)) {
+        if (pref.getTweak(Tweaks.Tweak.hideData)) {
             views.setViewVisibility(R.id.wdg_txt_data, View.GONE);
             views.setViewVisibility(R.id.wdg_prgBar_data, View.GONE);
         }
-        if (pref.getTweak(Tweaks.Items.hideBars)) {
+        if (pref.getTweak(Tweaks.Tweak.hideBars)) {
             views.setViewVisibility(R.id.wdg_prgBar_data, View.GONE);
             views.setViewVisibility(R.id.wdg_prgBar_date, View.GONE);
         }
-        if (pref.getTweak(Tweaks.Items.hideTexts)) {
+        if (pref.getTweak(Tweaks.Tweak.hideTexts)) {
             views.setViewVisibility(R.id.wdg_txt_data, View.GONE);
             views.setViewVisibility(R.id.wdg_txt_date, View.GONE);
         }
-        if (pref.getTweak(Tweaks.Items.capNoWarp)) {
+        if (pref.getTweak(Tweaks.Tweak.advancedSecondary)) {
+            final int sp = pref.getSavedPeriods();
+            double percent; // this is easier with Kotlin :(
+            if (commonInfo.percentData >= 1)
+                // [1,oo) = more than the current usage -> show full
+                percent = 1;
+            else if (commonInfo.percentData >= 0)
+                // [0,1) = normal usage -> don't show
+                percent = 0;
+            else if (commonInfo.percentData >= -sp + 1)
+                // [-sp+1,0) = saved data -> % in range
+                percent = (commonInfo.percentData + sp - 1) / (sp - 1);
+            else if (commonInfo.percentData >= -sp)
+                // [-sp,-sp+1) = will be lost -> % in range
+                percent = commonInfo.percentData + sp;
+            else
+                // (-oo,-sp) = more than one period will be lost -> show nothing
+                percent = 0;
+            views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress", Utils.dbl2int(percent * progressPrecision));
+        }
+        if (pref.getTweak(Tweaks.Tweak.capNoWarp)) {
             views.setProgressBar(R.id.wdg_prgBar_data, progressPrecision, Utils.dbl2int((commonInfo.percentData) * progressPrecision), false);
             views.setInt(R.id.wdg_prgBar_data, "setSecondaryProgress", 0);
         }
-        if (pref.getTweak(Tweaks.Items.whiteWidgets)) {
+        if (pref.getTweak(Tweaks.Tweak.whiteWidgets)) {
             views.setInt(R.id.wdg_parent, "setBackgroundResource", R.drawable.background_progress_white);
             views.setTextColor(R.id.wdg_txt_date, Color.BLACK);
             views.setTextColor(R.id.wdg_txt_data, Color.BLACK);

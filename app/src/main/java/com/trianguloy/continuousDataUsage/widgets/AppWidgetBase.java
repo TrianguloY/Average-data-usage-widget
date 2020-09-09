@@ -176,7 +176,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         }
 
         // tweaks
-        if (pref.getTweak(Tweaks.Items.showRemaining)) {
+        if (pref.getTweak(Tweaks.Tweak.showRemaining)) {
             returnedInfo.percentData = 1 - returnedInfo.percentData;
             returnedInfo.megabytes = returnedInfo.totalData - returnedInfo.megabytes;
             returnedInfo.percentDate = 1 - returnedInfo.percentDate;

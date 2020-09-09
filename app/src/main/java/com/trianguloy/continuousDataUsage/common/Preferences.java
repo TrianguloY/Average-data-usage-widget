@@ -225,11 +225,11 @@ public class Preferences {
     private static final String KEY_TWEAKS = "tweaks";
     private final Set<String> DEFAULT_TWEAKS = Collections.emptySet();
 
-    public boolean getTweak(Tweaks.Items tweak) {
+    public boolean getTweak(Tweaks.Tweak tweak) {
         return sharedPreferences.getBoolean(tweak.name(), false);
     }
 
-    public void setTweak(Tweaks.Items tweak, boolean enabled) {
+    public void setTweak(Tweaks.Tweak tweak, boolean enabled) {
         sharedPreferences.edit().putBoolean(tweak.name(), enabled).apply();
     }
 
@@ -241,7 +241,7 @@ public class Preferences {
             // check every saved tweak
             try {
                 // check if still exists
-                Tweaks.Items.valueOf(name);
+                Tweaks.Tweak.valueOf(name);
             } catch (IllegalArgumentException e) {
                 // if not, remove
                 edit.remove(name);
@@ -249,9 +249,9 @@ public class Preferences {
         }
 
         // save current tweaks list:
-        Tweaks.Items[] items = Tweaks.Items.values();
+        Tweaks.Tweak[] items = Tweaks.Tweak.values();
         Set<String> names = new HashSet<>(items.length);
-        for (Tweaks.Items tweak : items) {
+        for (Tweaks.Tweak tweak : items) {
             // add current tweak name to list
             names.add(tweak.name());
         }

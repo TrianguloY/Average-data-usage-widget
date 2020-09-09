@@ -92,7 +92,7 @@ public class Main extends Activity {
             // if exception, disable
             Toast.makeText(this, "Exception detected, disabling tweaks", Toast.LENGTH_LONG).show();
             Preferences prefs = new Preferences(this);
-            for(Tweaks.Items item : Tweaks.Items.values()){
+            for (Tweaks.Tweak item : Tweaks.Tweak.values()) {
                 prefs.setTweak(item, false);
             }
             updatePreview();

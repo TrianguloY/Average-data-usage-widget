@@ -25,7 +25,7 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
      * Tweak items.
      * Note: names are used as keys in preferences and as ids in strings (with prefix)
      */
-    public enum Items {
+    public enum Tweak {
         hideDate,
         hideData,
         hideBars,
@@ -34,6 +34,7 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
         showConsumed,
         showAverage,
         showRemaining,
+        advancedSecondary,
         capNoWarp,
     }
 
@@ -55,13 +56,13 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
     public void showDialog() {
 
         // get tweaks state
-        Items[] tweaks = Items.values();
+        Tweak[] tweaks = Tweak.values();
 
         CharSequence[] items = new CharSequence[tweaks.length];
         boolean[] checkItems = new boolean[tweaks.length];
 
         for (int i = 0; i < tweaks.length; i++) {
-            Items tweak = tweaks[i];
+            Tweak tweak = tweaks[i];
             // initialize item and append
             items[i] = getItemDescr(tweak);
             checkItems[i] = prefs.getTweak(tweak);
@@ -81,17 +82,18 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
 
     /**
      * Returns the description of a tweak
+     *
      * @param item which tweak
      * @return the description as string
      */
-    private String getItemDescr(Items item) {
+    private String getItemDescr(Tweak item) {
         try {
             return cntx.getString(cntx.getResources().getIdentifier(ID_PREFIX + item.name(), "string", cntx.getPackageName()));
         } catch (Resources.NotFoundException e) {
             if (BuildConfig.DEBUG) {
                 throw e; // rethrow in debug mode
             } else {
-                return "---"+item.name()+"---"; // placeholder in release mode
+                return "---" + item.name() + "---"; // placeholder in release mode
             }
         }
     }
@@ -100,6 +102,6 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-        prefs.setTweak(Items.values()[i], b);
+        prefs.setTweak(Tweak.values()[i], b);
     }
 }
