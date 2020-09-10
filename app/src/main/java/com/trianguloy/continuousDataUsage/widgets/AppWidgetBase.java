@@ -28,7 +28,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
     //abstract
     abstract void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId);
 
-    private static final String EXTRA_ACTION = "cdu_action";
+    private static final String EXTRA_ACTION = "com.trianguloy.continuousDataUsage.action";
     static final int ACTION_REFRESH = 0;
     static final int ACTION_USAGE = 1;
     static final int ACTION_INFO = 2;
