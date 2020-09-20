@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.trianguloy.continuousDataUsage.R;
 import com.trianguloy.continuousDataUsage.activities.HistoryActivity;
+import com.trianguloy.continuousDataUsage.common.Accumulated;
 import com.trianguloy.continuousDataUsage.common.DataUsage;
 import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
@@ -116,8 +117,13 @@ abstract class AppWidgetBase extends AppWidgetProvider {
 
         ReturnedInfo returnedInfo = new ReturnedInfo();
 
-        //get preferences
+        // get objects
         Preferences pref = new Preferences(context);
+        PeriodCalendar periodCalendar = new PeriodCalendar(pref);
+        DataUsage dataUsage = new DataUsage(context, pref);
+
+        // update
+        new Accumulated(pref, dataUsage, periodCalendar).updatePeriod();
 
         boolean infoRequested = pref.isInfoRequested();
 
@@ -125,7 +131,6 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         long currentMillis = System.currentTimeMillis();
 
         //current period
-        PeriodCalendar periodCalendar = new PeriodCalendar(pref);
         Pair<Long, Long> val = periodCalendar.getLimitsOfPeriod(0);
         long startOfPeriod = val.first;
         long endOfPeriod = val.second;
@@ -142,12 +147,11 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         double megabytes;
 
         try {
-            DataUsage dataUsage = new DataUsage(context, pref);
             megabytes = dataUsage.getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
 
             if (pref.getSavedPeriods() > 0) {
                 // subtract accumulated from previous period
-                double prev = dataUsage.getAccumulated();
+                double prev = pref.getAccumulated();
 
                 if (prev > 0)
                     megabytes -= prev;

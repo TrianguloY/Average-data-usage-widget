@@ -11,7 +11,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 
-import com.trianguloy.continuousDataUsage.BuildConfig;
 import com.trianguloy.continuousDataUsage.R;
 
 /**
@@ -34,19 +33,14 @@ public class DataUsage {
     }
 
     /**
-     * SubscriberId for the calculations
-     */
-    private final String subscriberId;
-
-    /**
-     * Class for the calculations
-     */
-    private final NetworkStatsManager nsm;
-
-    /**
      * Preferences
      */
     private Preferences pref;
+
+    /**
+     * Context
+     */
+    private Context cntx;
 
 
     //------------ Public --------------
@@ -54,22 +48,29 @@ public class DataUsage {
     /**
      * Constructor to avoid duplicated Preferences
      *
-     * @param context context
-     * @param pref    preferences class
-     * @throws Error if something bad happens
+     * @param cntx context
+     * @param pref preferences class
      */
-    public DataUsage(Context context, Preferences pref) throws Error {
+    public DataUsage(Context cntx, Preferences pref) {
         this.pref = pref;
+        this.cntx = cntx;
+    }
+
+
+    /**
+     * Initializes internal data
+     */
+    public void init() throws Error {
 
         //check permission
-        if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (cntx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             //no permission given, can't continue
             Log.d("widget", "error on checkSelfPermission");
             throw new Error(R.string.txt_widget_noPermission);
         }
 
         //get subscriber id
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) cntx.getSystemService(Context.TELEPHONY_SERVICE);
         if (tm == null) {
             //can't get telephony manager
 
@@ -84,40 +85,11 @@ public class DataUsage {
         }
 
         //get service
-        nsm = context.getSystemService(NetworkStatsManager.class);
+        nsm = cntx.getSystemService(NetworkStatsManager.class);
         if (nsm == null) {
             //can't get NetworkStatsManager
             Log.d("widget", "error on NetworkStatsManager");
             throw new Error(R.string.txt_widget_errorService);
-        }
-
-        // update
-        updatePeriod();
-    }
-
-    /**
-     * Checks if the currently saved period and accumulated data needs update, and does so
-     */
-    public void updatePeriod(){
-        final PeriodCalendar perCal = new PeriodCalendar(pref);
-        int current = perCal.getCurrentPeriod();
-
-        if (current != 0) {
-            // new period
-
-            // update start of period
-            pref.setPeriodStart(perCal.getStartOfPeriod(current));
-            if (BuildConfig.DEBUG && perCal.getCurrentPeriod() != 0) {
-                throw new AssertionError("Current period is "+perCal.getCurrentPeriod()+", not 0!");
-            }
-
-            // calculate new accumulated data
-            try {
-                pref.setAccumulated((float) calculateAccumulated(pref.getAccumulated(), -current, false, perCal));
-            } catch (Error ignore) {
-                // can't get, just ignore
-            }
-
         }
     }
 
@@ -128,7 +100,7 @@ public class DataUsage {
      * @return data usage in period
      * @throws Error if can't get the data
      */
-    private double getDataFromPeriod(Pair<Long, Long> from_to) throws Error {
+    public double getDataFromPeriod(Pair<Long, Long> from_to) throws Error {
         return getDataFromPeriod(from_to.first, from_to.second);
     }
 
@@ -145,7 +117,7 @@ public class DataUsage {
         //get data
         NetworkStats.Bucket bucket;
         try {
-            bucket = nsm.querySummaryForDevice(ConnectivityManager.TYPE_MOBILE, subscriberId, from, to);
+            bucket = getNsm().querySummaryForDevice(ConnectivityManager.TYPE_MOBILE, getSubscriberId(), from, to);
         } catch (RemoteException e) {
             Log.d("widget", "error on querySummaryForDevice-RemoteException");
             throw new Error(R.string.txt_widget_errorQuering);
@@ -161,60 +133,29 @@ public class DataUsage {
         return (bucket.getRxBytes() + bucket.getTxBytes()) * bytesConversion;
     }
 
+    // ------------------- internal data -------------------
+
 
     /**
-     * Returns the accumulated data from the previous period.
-     *
-     * @return the accumulated data in the previous period
+     * Class for the calculations
      */
-    public float getAccumulated() {
-        return pref.getAccumulated();
-    }
+    private NetworkStatsManager nsm = null;
 
-    // -----------------------------------
-
-    /**
-     * Recursive function to get the accumulated data starting from any previous period (ignores empty)
-     *
-     * @param accum     accumulated data in latest period
-     * @param period    which latest period
-     * @param skipEmpty if true, unspent months will be skipped
-     * @param perCal    PeriodCalendar object
-     * @return accumulated data in previous current period
-     * @throws Error if can't calculate it
-     */
-    private double calculateAccumulated(double accum, int period, boolean skipEmpty, PeriodCalendar perCal) throws Error {
-        if (period >= 0) {
-            //end of recursion, final period
-            return accum;
-        }
-
-        // onto next period
-        double dataInPeriod = getDataFromPeriod(perCal.getLimitsOfPeriod(period));
-
-        // skip if required and nothing was spent (device not configured yet)
-        if (!(skipEmpty && dataInPeriod == 0)) {
-
-            // calculate accumulated
-            accum += pref.getTotalData() - dataInPeriod;
-            if (accum < 0) accum = 0; // if used more, accumulated=0 (used all, nothing saved)
-            float periodsData = pref.getTotalData() * pref.getSavedPeriods();
-            if (accum > periodsData) accum = periodsData; // if accumulated more than possible, cut
-            skipEmpty = false;
-
-        }
-
-        return calculateAccumulated(accum, period + 1, skipEmpty, perCal);
+    private NetworkStatsManager getNsm() throws Error {
+        if (nsm == null)
+            init();
+        return nsm;
     }
 
     /**
-     * Tries to calculate the accumulated data of the previous period from the latest 12 periods (ignoring empty)
-     *
-     * @return calculated accumulated data
-     * @throws Error if can't get data
+     * SubscriberId for the calculations
      */
-    public double autoCalculateAccumulated() throws Error {
-        return calculateAccumulated(0, -12, true, new PeriodCalendar(pref));
+    private String subscriberId = null;
+
+    private String getSubscriberId() throws Error {
+        if (subscriberId == null)
+            init();
+        return subscriberId;
     }
 
 }

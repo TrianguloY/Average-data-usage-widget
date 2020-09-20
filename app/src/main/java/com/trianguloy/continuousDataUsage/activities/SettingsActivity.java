@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.common.Accumulated;
 import com.trianguloy.continuousDataUsage.common.DataUsage;
 import com.trianguloy.continuousDataUsage.common.NumericEditText;
 import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
@@ -244,7 +245,8 @@ public class SettingsActivity extends Activity {
             case R.id.stt_btn_accum:
                 //auto-calculate accumulated
                 try {
-                    view_accumulated.setValue((float) new DataUsage(this, pref).autoCalculateAccumulated());
+                    view_accumulated.setValue((float) new Accumulated(pref, new DataUsage(this, pref), new PeriodCalendar(pref))
+                            .autoCalculateAccumulated());
                 } catch (DataUsage.Error e) {
                     Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                 }
@@ -286,6 +288,8 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+//        device.updatePeriod();
+//        initialize();
         checkPermissions();
     }
 

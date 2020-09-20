@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trianguloy.continuousDataUsage.R;
+import com.trianguloy.continuousDataUsage.common.Accumulated;
 import com.trianguloy.continuousDataUsage.common.DataUsage;
 import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
@@ -56,7 +57,17 @@ public class HistoryActivity extends Activity {
         // initialize objects
         pref = new Preferences(this);
         periodCalendar = new PeriodCalendar(pref);
+        dataUsage = new DataUsage(this, pref);
         adapter = new ListAdapter(this);
+
+        try {
+            // check for permission explicitly
+            dataUsage.init();
+        } catch (DataUsage.Error e) {
+            // can't open, probably no permission
+            Toast.makeText(this, e.errorId, Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         // get views
         ListView view_list = findViewById(R.id.h_lv_list);
@@ -68,13 +79,8 @@ public class HistoryActivity extends Activity {
         view_list.setAdapter(adapter);
         adapter.setDummyView(findViewById(R.id.h_item_dummy));
 
-        try{
-            dataUsage = new DataUsage(this, pref);
-        }catch (DataUsage.Error e){
-            // can't open, probably no permission
-            Toast.makeText(this, e.errorId, Toast.LENGTH_LONG).show();
-            finish();
-        }
+        // update
+        new Accumulated(pref, dataUsage, periodCalendar).updatePeriod();
 
         period = 0;
     }
@@ -92,8 +98,8 @@ public class HistoryActivity extends Activity {
         return true;
     }
 
-    public void onClick(View view){
-        switch(view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.h_btn_left:
                 // decrement period
                 period--;
@@ -101,7 +107,7 @@ public class HistoryActivity extends Activity {
                 break;
             case R.id.h_btn_right:
                 // increment period (if possible)
-                if(period < 0) {
+                if (period < 0) {
                     period++;
                     setPeriod();
                 }
@@ -111,7 +117,7 @@ public class HistoryActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.h_action_info:
                 //show info
                 new AlertDialog.Builder(this).setMessage(R.string.h_toast_info).setCancelable(true).show();
@@ -161,13 +167,13 @@ public class HistoryActivity extends Activity {
         String monthTo = title_format.format(to.getTime());
 
         //set title
-        final String month = monthTo.equals(monthFrom) ? monthFrom : monthFrom +" - " + monthTo;
+        final String month = monthTo.equals(monthFrom) ? monthFrom : monthFrom + " - " + monthTo;
         view_title.setText(month);
         to.add(Calendar.DAY_OF_MONTH, 1);
 
 
         //background update
-        if(thread_setPeriod != null){
+        if (thread_setPeriod != null) {
             thread_setPeriod.interrupt();
             try {
                 thread_setPeriod.join();
@@ -195,7 +201,7 @@ public class HistoryActivity extends Activity {
                     while (from < to.getTimeInMillis() && !Thread.currentThread().isInterrupted()) {
                         long end = to.getTimeInMillis();
                         to.add(Calendar.DAY_OF_MONTH, -1);
-                        if(to.getTimeInMillis() <= System.currentTimeMillis()) {
+                        if (to.getTimeInMillis() <= System.currentTimeMillis()) {
                             adapter.addItem(dataUsage.getDataFromPeriod(to.getTimeInMillis(), end), dateFormat.format(to.getTime()));
                         }
                     }
@@ -209,7 +215,7 @@ public class HistoryActivity extends Activity {
                     });
                 }
 
-                if(Thread.currentThread().isInterrupted()) return;
+                if (Thread.currentThread().isInterrupted()) return;
 
                 //notify
                 runOnUiThread(new Runnable() {
