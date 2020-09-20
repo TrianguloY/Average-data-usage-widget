@@ -43,11 +43,14 @@ public class SettingsActivity extends Activity {
 
     // used classes
     private Preferences pref = null;
+    private Accumulated accumulated;
 
-    // variables
+    // views
     private NumericEditText view_accumulated;
     private TextView view_txt_decimals;
     private EditText txt_periodStart;
+    private TextView txt_readPhone;
+    private TextView txt_usageStats;
 
 
     /**
@@ -60,12 +63,20 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        //get prefs
+        // get objects
         pref = new Preferences(this);
+        accumulated = new Accumulated(pref, new DataUsage(this, pref), new PeriodCalendar(pref));
+
+        // get views
+        txt_readPhone = findViewById(R.id.stt_txt_readPhone);
+        txt_usageStats = findViewById(R.id.stt_txt_usageStats);
 
         //initializes
         initialize();
-        checkPermissions();
+
+        // updates
+        accumulated.updatePeriod();
+        updateViews();
 
     }
 
@@ -84,12 +95,7 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        // periodStart
-        txt_periodStart = findViewById(R.id.stt_edTxt_periodStart);
-        final Calendar periodStart = pref.getPeriodStart();
-        txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(periodStart.getTime()));
-
-        // period amount
+        // period length, amount
         final NumericEditText txt_periodLength = findViewById(R.id.stt_edTxt_periodLength);
         txt_periodLength.initInt(false, pref.getPeriodLength(), new NumericEditText.OnNewIntListener() {
             @Override
@@ -98,7 +104,7 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        // period type
+        // period length, type
         final Spinner spn_periodType = findViewById(R.id.stt_spn_periodType);
         final List<Integer> periodTypes = Arrays.asList(Calendar.DAY_OF_MONTH, Calendar.MONTH);
         spn_periodType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{getString(R.string.days), getString(R.string.months)}));
@@ -115,37 +121,8 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        //alternate conversion
-        final CheckBox view_alternateConversion = findViewById(R.id.stt_chkBx_alternateConversion);
-        view_alternateConversion.setChecked(pref.getAltConversion());
-        view_alternateConversion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pref.setAltConversion(view_alternateConversion.isChecked());
-            }
-        });
-
-        // accumulated periods
-        final NumericEditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
-        final View view_ll = findViewById(R.id.ll_accum);
-        view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
-        view_sb_savedPeriods.initInt(true, pref.getSavedPeriods(), new NumericEditText.OnNewIntListener() {
-            @Override
-            public void newNumber(int number) {
-                pref.setSavedPeriods(number);
-                view_ll.setVisibility(number > 0 ? View.VISIBLE : View.GONE);
-            }
-        });
-
-
-        // accumulated megas
-        view_accumulated = findViewById(R.id.stt_edTxt_accum);
-        view_accumulated.initFloat(true, pref.getAccumulated(), new NumericEditText.OnNewFloatListener() {
-            @Override
-            public void newNumber(float number) {
-                pref.setAccumulated(number);
-            }
-        });
+        // periodStart
+        txt_periodStart = findViewById(R.id.stt_edTxt_periodStart);
 
         // decimals
         view_txt_decimals = findViewById(R.id.stt_txt_decimals);
@@ -178,6 +155,37 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        //alternate conversion
+        final CheckBox view_alternateConversion = findViewById(R.id.stt_chkBx_alternateConversion);
+        view_alternateConversion.setChecked(pref.getAltConversion());
+        view_alternateConversion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pref.setAltConversion(view_alternateConversion.isChecked());
+            }
+        });
+
+        // accumulated periods
+        final NumericEditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
+        final View view_ll = findViewById(R.id.ll_accum);
+        view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
+        view_sb_savedPeriods.initInt(true, pref.getSavedPeriods(), new NumericEditText.OnNewIntListener() {
+            @Override
+            public void newNumber(int number) {
+                pref.setSavedPeriods(number);
+                view_ll.setVisibility(number > 0 ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        // accumulated megas
+        view_accumulated = findViewById(R.id.stt_edTxt_accum);
+        view_accumulated.initFloat(true, pref.getAccumulated(), new NumericEditText.OnNewFloatListener() {
+            @Override
+            public void newNumber(float number) {
+                pref.setAccumulated(number);
+            }
+        });
+
         //clickable links
         for (int id : new int[]{R.id.stt_txt_perm_ps, R.id.stt_txt_perm_us}) {
             ((TextView) findViewById(id)).setMovementMethod(LinkMovementMethod.getInstance());
@@ -185,24 +193,25 @@ public class SettingsActivity extends Activity {
 
     }
 
+    private void updateViews() {
+        // period start
+        final Calendar periodStart = pref.getPeriodStart();
+        txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(periodStart.getTime()));
 
-    /**
-     * Checks the permissions and changes the corresponding indicators accordingly (red-green)
-     */
-    private void checkPermissions() {
+        // accumulated megas
+        view_accumulated.setValue(pref.getAccumulated());
 
-        //check readPhoneState
-        setPermissionState(R.id.stt_txt_readPhone, checkSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED);
+        // readPhoneState permission
+        setPermissionState(txt_readPhone, checkSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED);
 
-        //check getUsageStats
+        // getUsageStats permission
         int mode = AppOpsManager.MODE_DEFAULT;
         AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
         if (appOps != null) {
             //check permission
             mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), getPackageName());
         }
-        setPermissionState(R.id.stt_txt_usageStats, mode == AppOpsManager.MODE_ALLOWED);
-
+        setPermissionState(txt_usageStats, mode == AppOpsManager.MODE_ALLOWED);
     }
 
 
@@ -211,11 +220,10 @@ public class SettingsActivity extends Activity {
      * state=true -> green and 'permission granted'
      * state=false -> red and 'permission needed'
      *
-     * @param textView_id id of the textview to update
-     * @param state       the state
+     * @param txt   textview to update
+     * @param state the state
      */
-    private void setPermissionState(int textView_id, boolean state) {
-        TextView txt = findViewById(textView_id);
+    private void setPermissionState(TextView txt, boolean state) {
         txt.setText(state ? getString(R.string.txt_permissionGranted) : getString(R.string.txt_permissionsNeeded));
         txt.setBackgroundColor(state ? Color.argb(128, 0, 255, 0) : Color.argb(128, 255, 0, 0));
     }
@@ -245,7 +253,7 @@ public class SettingsActivity extends Activity {
             case R.id.stt_btn_accum:
                 //auto-calculate accumulated
                 try {
-                    view_accumulated.setValue((float) new Accumulated(pref, new DataUsage(this, pref), new PeriodCalendar(pref))
+                    view_accumulated.setValue((float) accumulated
                             .autoCalculateAccumulated());
                 } catch (DataUsage.Error e) {
                     Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
@@ -288,9 +296,8 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-//        device.updatePeriod();
-//        initialize();
-        checkPermissions();
+        accumulated.updatePeriod();
+        updateViews();
     }
 
 
@@ -303,7 +310,7 @@ public class SettingsActivity extends Activity {
      */
     @Override
     public void onRequestPermissionsResult(int i, String[] s, int[] j) {
-        checkPermissions();
+        updateViews();
     }
 
 

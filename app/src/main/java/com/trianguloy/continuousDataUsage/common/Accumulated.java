@@ -5,7 +5,7 @@ import android.util.Log;
 import com.trianguloy.continuousDataUsage.BuildConfig;
 
 /**
- * For the accumulated data.
+ * Functions related to the accumulated data.
  */
 public class Accumulated {
 
