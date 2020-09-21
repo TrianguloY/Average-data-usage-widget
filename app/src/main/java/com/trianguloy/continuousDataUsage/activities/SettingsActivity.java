@@ -30,6 +30,7 @@ import com.trianguloy.continuousDataUsage.common.NumericEditText;
 import com.trianguloy.continuousDataUsage.common.PeriodCalendar;
 import com.trianguloy.continuousDataUsage.common.Preferences;
 import com.trianguloy.continuousDataUsage.common.Tweaks;
+import com.trianguloy.continuousDataUsage.common.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -300,6 +301,11 @@ public class SettingsActivity extends Activity {
         updateViews();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Utils.updateAllWidgets(this);
+    }
 
     /**
      * After requesting permissions, updates views accordingly.

@@ -1,5 +1,13 @@
 package com.trianguloy.continuousDataUsage.common;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+
+import com.trianguloy.continuousDataUsage.widgets.AppWidgetProgress;
+import com.trianguloy.continuousDataUsage.widgets.AppWidgetRate;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -85,5 +93,18 @@ public class Utils {
 
         // return
         return formatted.toString();
+    }
+
+    /**
+     * Update all widgets now
+     */
+    public static void updateAllWidgets(Context context) {
+        AppWidgetManager man = AppWidgetManager.getInstance(context);
+        for (Class cls : new Class[]{AppWidgetProgress.class, AppWidgetRate.class}) {
+            Intent updateIntent = new Intent(context, cls);
+            updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, man.getAppWidgetIds(new ComponentName(context, cls)));
+            context.sendBroadcast(updateIntent);
+        }
     }
 }
