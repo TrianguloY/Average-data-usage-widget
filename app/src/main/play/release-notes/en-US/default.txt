@@ -1,0 +1,4 @@
+V 3.0
+- Configurable period length (any number of days or months).
+- New tweak: advanced secondary bars
+- Improved settings screen

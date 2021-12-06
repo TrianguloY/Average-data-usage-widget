@@ -1,0 +1,36 @@
+New: You can now configure the start and duration of the period, for example one week, 28 days, or even one year.
+
+
+
+Do you have an almost unlimited data plan and you never consume all your data? Lucky you! Unfortunately this app will be useless in this situation.
+
+On the other hand: do you have a limited data plan and it has happened to you:
+a) You always spend too much data on the first days of the period, and you have few left at the end?
+or
+b) You try not to spend too much data at the beginning of the period, and then you end with unused data?
+or
+c) You always wanted to know 'Did I spent too much already?' 'Am I above an average usage?'.
+
+Then this app will (I hope) help you! 
+It shows your data usage (bottom bar, how much you already used) with an ideal 'average data usage' (top bar, how much you would have used by downloading the same amount of bytes every second in the period). This way with just one look you can check if you are above or below the 'average data usage'.
+ - If the top bar is longer than the bottom: Good! You can download a bit more and still have at the end of the period.
+ - If the top bar is shorter than the bottom: Not good! You need to stop using too much data, otherwise you'll end with no more left.
+
+Isn't this useful? I think it is, and that's why I (TrianguloY) published it. It doesn't contains ads, and it is absurdly lightweight, so give it a try.
+If you have any suggestion or comment leave one or send an email.
+
+DISCLAIMER!!!!
+Please note that the current consumption is measured by your device and may differ with your company measurement. I can't take responsibility if the displayed data usage is wrong.
+
+
+Permissions:
+- READ_PHONE_STATE - Permission needed to get the device identification only. No other data is retrieved nor used. 
+More info here: https://developer.android.com/reference/android/telephony/TelephonyManager.html#getSubscriberId().
+
+- PACKAGE_USAGE_STATS - Permission needed to get the current usage from the usage service. No other data is retrieved nor used.
+More info here: https://developer.android.com/reference/android/app/usage/NetworkStatsManager.html#querySummaryForDevice(int,%20java.lang.String,%20long,%20long)
+
+NOTE: there is no internet permission, there are no ads so it is not necessary.
+
+---------------------------------
+The source code is available here: https://github.com/TrianguloY/Average-data-usage-widget
