@@ -2,9 +2,20 @@
 
 Android app made by TrianguloY
 
-- Play Store link: https://play.google.com/store/apps/details?id=com.trianguloy.continuousDataUsage
-- F-Droid link: https://f-droid.org/packages/com.trianguloy.continuousDataUsage/
-- App page: http://triangularapps.blogspot.com/p/average-data-usage-widget.html
+Get it on Google Play:\
+https://play.google.com/store/apps/details?id=com.trianguloy.continuousDataUsage \
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+alt="Get it on Google Play"
+height="80">](https://play.google.com/store/apps/details?id=com.trianguloy.continuousDataUsage)
+
+Get it on F-Droid:\
+https://f-droid.org/packages/com.trianguloy.urlchecker/ \
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+alt="Get it on F-Droid"
+height="80">](https://f-droid.org/packages/com.trianguloy.continuousDataUsage/)
+
+Check more details on the app page: \
+http://triangularapps.blogspot.com/p/average-data-usage-widget.html
 
 You can use parts of this project in your own ones, create pull request, or upload modified versions of it AS LONG AS you credit me.
 
