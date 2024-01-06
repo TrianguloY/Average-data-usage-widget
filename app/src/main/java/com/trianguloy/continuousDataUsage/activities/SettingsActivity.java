@@ -87,21 +87,11 @@ public class SettingsActivity extends Activity {
 
         // totaldata
         final NumericEditText view_totalData = findViewById(R.id.stt_edTxt_totalData);
-        view_totalData.initFloat(false, pref.getTotalData(), new NumericEditText.OnNewFloatListener() {
-            @Override
-            public void newNumber(float number) {
-                pref.setTotalData(number);
-            }
-        });
+        view_totalData.initFloat(false, false, pref.getTotalData(), number -> pref.setTotalData(number));
 
         // period length, amount
         final NumericEditText txt_periodLength = findViewById(R.id.stt_edTxt_periodLength);
-        txt_periodLength.initInt(false, pref.getPeriodLength(), new NumericEditText.OnNewIntListener() {
-            @Override
-            public void newNumber(int number) {
-                pref.setPeriodLength(number);
-            }
-        });
+        txt_periodLength.initInt(false, false, pref.getPeriodLength(), number -> pref.setPeriodLength(number));
 
         // period length, type
         final Spinner spn_periodType = findViewById(R.id.stt_spn_periodType);
@@ -158,22 +148,14 @@ public class SettingsActivity extends Activity {
         final NumericEditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
         final View view_ll = findViewById(R.id.ll_accum);
         view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
-        view_sb_savedPeriods.initInt(true, pref.getSavedPeriods(), new NumericEditText.OnNewIntListener() {
-            @Override
-            public void newNumber(int number) {
-                pref.setSavedPeriods(number);
-                view_ll.setVisibility(number > 0 ? View.VISIBLE : View.GONE);
-            }
+        view_sb_savedPeriods.initInt(true, false, pref.getSavedPeriods(), number -> {
+            pref.setSavedPeriods(number);
+            view_ll.setVisibility(number > 0 ? View.VISIBLE : View.GONE);
         });
 
         // accumulated megas
         view_accumulated = findViewById(R.id.stt_edTxt_accum);
-        view_accumulated.initFloat(true, pref.getAccumulated(), new NumericEditText.OnNewFloatListener() {
-            @Override
-            public void newNumber(float number) {
-                pref.setAccumulated(number);
-            }
-        });
+        view_accumulated.initFloat(true, true, pref.getAccumulated(), number -> pref.setAccumulated(number));
 
         //clickable links
         ((TextView) findViewById(R.id.stt_txt_perm_us)).setMovementMethod(LinkMovementMethod.getInstance());

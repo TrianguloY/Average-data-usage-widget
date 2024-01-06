@@ -268,7 +268,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="numberDecimal" />
+                    android:inputType="number|numberDecimal|numberSigned" />
 
                 <TextView
                     android:id="@+id/textView9"

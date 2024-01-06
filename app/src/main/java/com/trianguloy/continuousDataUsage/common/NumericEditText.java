@@ -13,6 +13,11 @@ import java.util.Locale;
 
 public class NumericEditText extends EditText {
     private boolean mAllowZero = false;
+    private boolean mAllowNegative = false;
+
+    public NumericEditText(Context context) {
+        super(context);
+    }
 
     public NumericEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -21,8 +26,9 @@ public class NumericEditText extends EditText {
     // ------------------- Integer -------------------
     private OnNewIntListener mIntListener = null;
 
-    public void initInt(boolean allowZero, int value, OnNewIntListener listener) {
+    public void initInt(boolean allowZero, boolean allowNegative, int value, OnNewIntListener listener) {
         mAllowZero = allowZero;
+        mAllowNegative = allowNegative;
         addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -69,8 +75,9 @@ public class NumericEditText extends EditText {
 
     private OnNewFloatListener mFloatListener = null;
 
-    public void initFloat(boolean allowZero, float initial, OnNewFloatListener listener) {
+    public void initFloat(boolean allowZero, boolean allowNegative, float initial, OnNewFloatListener listener) {
         mAllowZero = allowZero;
+        mAllowNegative = allowNegative;
         addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -87,7 +94,7 @@ public class NumericEditText extends EditText {
 
                 try {
                     float value = NumberFormat.getInstance(Locale.US).parse(editable.toString()).floatValue();
-                    if ((value > 0) || (mAllowZero && value == 0)) {
+                    if ((mAllowNegative && value < 0) || value > 0 || (mAllowZero && value == 0)) {
                         // valid number
                         setHint(String.format(Locale.US, "%s", value));
                         if (mFloatListener != null) mFloatListener.newNumber(value);
