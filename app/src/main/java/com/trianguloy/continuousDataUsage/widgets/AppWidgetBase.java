@@ -210,7 +210,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         intent.putExtra(EXTRA_ACTION, action);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, action, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, action, intent, PendingIntent.FLAG_IMMUTABLE);
         for (int view : views) {
             remoteViews.setOnClickPendingIntent(view, pendingIntent);
         }

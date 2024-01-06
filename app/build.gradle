@@ -4,9 +4,8 @@ android {
     compileSdk 33
     defaultConfig {
         applicationId "com.trianguloy.continuousDataUsage"
-        minSdkVersion 25
-        //noinspection OldTargetApi
-        targetSdkVersion 28 // don't change, on 29 it is forbidden to get the subscriberid
+        minSdkVersion 29
+        targetSdkVersion 33
     }
     buildTypes {
         release {

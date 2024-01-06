@@ -61,29 +61,6 @@ public class DataUsage {
      * Initializes internal data
      */
     public void init() throws Error {
-
-        //check permission
-        if (cntx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            //no permission given, can't continue
-            Log.d("widget", "error on checkSelfPermission");
-            throw new Error(R.string.txt_widget_noPermission);
-        }
-
-        //get subscriber id
-        TelephonyManager tm = (TelephonyManager) cntx.getSystemService(Context.TELEPHONY_SERVICE);
-        if (tm == null) {
-            //can't get telephony manager
-
-            Log.d("widget", "error on TelephonyManager");
-            throw new Error(R.string.txt_widget_errorService);
-        }
-        try {
-            subscriberId = tm.getSubscriberId();
-            //subscriberId = "";
-        } catch (SecurityException e) {
-            throw new Error(R.string.txt_widget_noPermission);
-        }
-
         //get service
         nsm = cntx.getSystemService(NetworkStatsManager.class);
         if (nsm == null) {
@@ -117,7 +94,7 @@ public class DataUsage {
         //get data
         NetworkStats.Bucket bucket;
         try {
-            bucket = getNsm().querySummaryForDevice(ConnectivityManager.TYPE_MOBILE, getSubscriberId(), from, to);
+            bucket = getNsm().querySummaryForDevice(ConnectivityManager.TYPE_MOBILE, null, from, to);
         } catch (RemoteException e) {
             Log.d("widget", "error on querySummaryForDevice-RemoteException");
             throw new Error(R.string.txt_widget_errorQuering);
@@ -145,17 +122,6 @@ public class DataUsage {
         if (nsm == null)
             init();
         return nsm;
-    }
-
-    /**
-     * SubscriberId for the calculations
-     */
-    private String subscriberId = null;
-
-    private String getSubscriberId() throws Error {
-        if (subscriberId == null)
-            init();
-        return subscriberId;
     }
 
 }

@@ -24,9 +24,6 @@ Please note that the current consumption is measured by your device and may diff
 
 
 Permissions:
-- READ_PHONE_STATE - Permission needed to get the device identification only. No other data is retrieved nor used. 
-More info here: https://developer.android.com/reference/android/telephony/TelephonyManager.html#getSubscriberId().
-
 - PACKAGE_USAGE_STATS - Permission needed to get the current usage from the usage service. No other data is retrieved nor used.
 More info here: https://developer.android.com/reference/android/app/usage/NetworkStatsManager.html#querySummaryForDevice(int,%20java.lang.String,%20long,%20long)
 

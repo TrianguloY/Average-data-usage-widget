@@ -50,7 +50,6 @@ public class SettingsActivity extends Activity {
     private NumericEditText view_accumulated;
     private TextView view_txt_decimals;
     private EditText txt_periodStart;
-    private TextView txt_readPhone;
     private TextView txt_usageStats;
 
 
@@ -69,7 +68,6 @@ public class SettingsActivity extends Activity {
         accumulated = new Accumulated(pref, new DataUsage(this, pref), new PeriodCalendar(pref));
 
         // get views
-        txt_readPhone = findViewById(R.id.stt_txt_readPhone);
         txt_usageStats = findViewById(R.id.stt_txt_usageStats);
 
         //initializes
@@ -188,9 +186,7 @@ public class SettingsActivity extends Activity {
         });
 
         //clickable links
-        for (int id : new int[]{R.id.stt_txt_perm_ps, R.id.stt_txt_perm_us}) {
-            ((TextView) findViewById(id)).setMovementMethod(LinkMovementMethod.getInstance());
-        }
+        ((TextView) findViewById(R.id.stt_txt_perm_us)).setMovementMethod(LinkMovementMethod.getInstance());
 
     }
 
@@ -201,9 +197,6 @@ public class SettingsActivity extends Activity {
 
         // accumulated megas
         view_accumulated.setValue(pref.getAccumulated());
-
-        // readPhoneState permission
-        setPermissionState(txt_readPhone, checkSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED);
 
         // getUsageStats permission
         int mode = AppOpsManager.MODE_DEFAULT;
@@ -237,10 +230,6 @@ public class SettingsActivity extends Activity {
      */
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.stt_btn_readPhone:
-                //request 'read phone permission' button, request permission
-                requestPermissions(new String[]{"android.permission.READ_PHONE_STATE"}, 0);//"android.permission.PACKAGE_USAGE_STATS" can't be asked this way
-                break;
             case R.id.stt_btn_usageStats:
                 //open usage settings to give permission
                 startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));

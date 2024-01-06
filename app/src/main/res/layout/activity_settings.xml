@@ -28,33 +28,6 @@
             android:textAppearance="@android:style/TextAppearance.Material.Title" />
 
         <TextView
-            android:id="@+id/stt_txt_perm_ps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_desc_permission_phoneState" />
-
-        <TextView
-            android:id="@+id/stt_txt_readPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_error_noPermisionState"
-            android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/stt_btn_readPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClick"
-            android:text="@string/btn_permission_phoneState" />
-
-        <ImageView
-            android:id="@+id/smallSeparator3"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="@dimen/activity_margin"
-            android:src="@color/colorAccent" />
-
-        <TextView
             android:id="@+id/stt_txt_perm_us"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

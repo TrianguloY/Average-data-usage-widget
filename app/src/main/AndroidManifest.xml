@@ -7,7 +7,6 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +16,8 @@
         android:theme="@android:style/Theme.DeviceDefault">
         <activity
             android:name=".activities.Main"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +37,8 @@
 
         <receiver
             android:name=".widgets.AppWidgetProgress"
-            android:label="@string/wdgLabel_progressBars">
+            android:label="@string/wdgLabel_progressBars"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -48,7 +49,8 @@
         </receiver>
         <receiver
             android:name=".widgets.AppWidgetRate"
-            android:label="@string/wdgLabel_rate">
+            android:label="@string/wdgLabel_rate"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
