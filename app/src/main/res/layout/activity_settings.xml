@@ -45,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:text="@string/btn_permission_usageStats" />
 
         <ImageView
@@ -283,6 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onClick"
+                    style="@android:style/Widget.DeviceDefault.Button.Borderless"
                     android:text="@string/btn_settings_accum" />
             </LinearLayout>
 
@@ -306,6 +308,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:text="@string/btn_tweaks" />
 
         <Space

@@ -27,6 +27,7 @@
                 android:drawableStart="@drawable/ic_history"
                 android:drawableTint="#AAAAAA"
                 android:onClick="onClick"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
                 android:text="@string/h_title" />
 
             <Button
@@ -36,6 +37,7 @@
                 android:layout_weight="1"
                 android:drawableStart="@android:drawable/ic_menu_manage"
                 android:onClick="onClick"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
                 android:text="@string/s_title" />
         </LinearLayout>
 

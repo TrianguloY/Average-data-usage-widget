@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:text="@string/btn_left" />
 
         <TextView
@@ -32,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:text="@string/btn_right" />
     </LinearLayout>
 
