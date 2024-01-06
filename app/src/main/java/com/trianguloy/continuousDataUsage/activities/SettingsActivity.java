@@ -214,13 +214,8 @@ public class SettingsActivity extends Activity {
 
             case R.id.stt_btn_accum:
                 //auto-calculate accumulated
-                try {
-                    view_accumulated.setValue((float) accumulated
-                            .autoCalculateAccumulated());
-                } catch (DataUsage.Error e) {
-                    Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
-                }
-                // update if nececesary
+                calculate();
+                // update if necessary
                 txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(pref.getPeriodStart().getTime()));
                 break;
             case R.id.stt_btn_tweaks:
@@ -228,6 +223,64 @@ public class SettingsActivity extends Activity {
                 new Tweaks(pref, this).showDialog();
                 break;
         }
+    }
+
+    /**
+     * Allows the user to choose how to calculate the accumulated data
+     */
+    private void calculate() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.btn_settings_accum)
+                .setItems(R.array.itms_settings_accum, (dialog, which) -> {
+                    try {
+                        switch (which){
+                            case 0:
+                                view_accumulated.setValue((float) accumulated.autoCalculateAccumulated());
+                                break;
+                            case 1:
+                                setVisibleData();
+                                break;
+                        }
+                    } catch (DataUsage.Error e) {
+                        Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Calculates the accumulated data based on the visible amount
+     */
+    private void setVisibleData() throws DataUsage.Error {
+
+        double data = accumulated.getUsedDataFromCurrentPeriod();
+
+        if (pref.getTweak(Tweaks.Tweak.showRemaining)) {
+            data = pref.getTotalData() - data;
+        }
+
+        final float[] input = {(float) data};
+        NumericEditText txt = new NumericEditText(this);
+        txt.setInputType(EditorInfo.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        txt.initFloat(true, true, input[0], number -> input[0] = number);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.txt_visible_title)
+                .setMessage(R.string.txt_visible_message)
+                .setView(txt)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+
+                    if (pref.getTweak(Tweaks.Tweak.showRemaining)) {
+                        input[0] = pref.getTotalData() - input[0];
+                    }
+
+                    try {
+                        view_accumulated.setValue((float) accumulated.setUsedDataFromCurrentPeriod(input[0]));
+                    } catch (DataUsage.Error e) {
+                        Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     /**

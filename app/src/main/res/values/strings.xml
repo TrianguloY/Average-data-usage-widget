@@ -43,6 +43,12 @@
     <string name="btn_settings_accum">Calculate</string>
     <string name="months">Months</string>
     <string name="days">Days</string>
+    <string-array name="itms_settings_accum">
+        <item>Automatic</item>
+        <item>Visible</item>
+    </string-array>
+    <string name="txt_visible_title">Current value</string>
+    <string name="txt_visible_message">Set here what the widget should display, and the data will be set accordingly</string>
 
 
     <!-- widget -->

@@ -21,6 +21,31 @@ public class Accumulated {
     }
 
     /**
+     * Returns the used data from the current period (used - accumulated)
+     */
+    public double getUsedDataFromCurrentPeriod() throws DataUsage.Error {
+        double usedData = dataUsage.getDataFromPeriod(periodCalendar.getLimitsOfPeriod(0).first, Long.MAX_VALUE);
+
+        if (pref.getSavedPeriods() > 0) {
+            // subtract accumulated from previous period
+            usedData -= pref.getAccumulated();
+        }
+
+        return usedData;
+    }
+
+    /**
+     * Sets the used data from the current period (by changing the accumulated value, which then returns)
+     */
+    public double setUsedDataFromCurrentPeriod(double usedData) throws DataUsage.Error {
+        if (pref.getSavedPeriods() <= 0) return 0;
+
+        double accumulated = dataUsage.getDataFromPeriod(periodCalendar.getLimitsOfPeriod(0).first, Long.MAX_VALUE) - usedData;
+        pref.setAccumulated((float) accumulated);
+        return accumulated;
+    }
+
+    /**
      * Checks if the currently saved period and accumulated data needs update, and does so.
      */
     public void updatePeriod() {

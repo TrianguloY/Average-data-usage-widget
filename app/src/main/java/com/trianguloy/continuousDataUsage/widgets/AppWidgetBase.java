@@ -121,9 +121,10 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         Preferences pref = new Preferences(context);
         PeriodCalendar periodCalendar = new PeriodCalendar(pref);
         DataUsage dataUsage = new DataUsage(context, pref);
+        Accumulated accumulated = new Accumulated(pref, dataUsage, periodCalendar);
 
         // update
-        new Accumulated(pref, dataUsage, periodCalendar).updatePeriod();
+        accumulated.updatePeriod();
 
         boolean infoRequested = pref.isInfoRequested();
 
@@ -137,8 +138,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
 
 
         //upper bar
-        double percentDate = (currentMillis - startOfPeriod) / (double) (endOfPeriod - startOfPeriod);
-        returnedInfo.percentDate = percentDate;
+        returnedInfo.percentDate = (currentMillis - startOfPeriod) / (double) (endOfPeriod - startOfPeriod);
         double totalData = pref.getTotalData();
         returnedInfo.totalData = totalData;
 
@@ -147,16 +147,7 @@ abstract class AppWidgetBase extends AppWidgetProvider {
         double megabytes;
 
         try {
-            megabytes = dataUsage.getDataFromPeriod(startOfPeriod, Long.MAX_VALUE);
-
-            if (pref.getSavedPeriods() > 0) {
-                // subtract accumulated from previous period
-                double prev = pref.getAccumulated();
-
-                if (prev > 0)
-                    megabytes -= prev;
-                //if(megabytes<0)megabytes=0;
-            }
+            megabytes = accumulated.getUsedDataFromCurrentPeriod();
 
         } catch (DataUsage.Error e) {
             returnedInfo.error = e.errorId;
