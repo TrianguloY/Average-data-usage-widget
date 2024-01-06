@@ -49,12 +49,12 @@ public class ListAdapter extends BaseAdapter {
     /**
      * Context used
      */
-    private Context cntx;
+    private final Context cntx;
 
     /**
      * Preferences
      */
-    private Preferences pref;
+    private final Preferences pref;
 
     /**
      * Items in the list

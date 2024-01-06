@@ -189,43 +189,32 @@ public class HistoryActivity extends Activity {
         view_right.setEnabled(period < 0);
 
 
-        thread_setPeriod = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        thread_setPeriod = new Thread(() -> {
 
-                adapter.setDataPerDay(
-                        pref.getTotalData() / Math.round((to.getTimeInMillis() - from) / 1000d / 60d / 60d / 24d)
-                );
+            adapter.setDataPerDay(
+                    pref.getTotalData() / Math.round((to.getTimeInMillis() - from) / 1000d / 60d / 60d / 24d)
+            );
 
-                try {
-                    while (from < to.getTimeInMillis() && !Thread.currentThread().isInterrupted()) {
-                        long end = to.getTimeInMillis();
-                        to.add(Calendar.DAY_OF_MONTH, -1);
-                        if (to.getTimeInMillis() <= System.currentTimeMillis()) {
-                            adapter.addItem(dataUsage.getDataFromPeriod(to.getTimeInMillis(), end), dateFormat.format(to.getTime()));
-                        }
+            try {
+                while (from < to.getTimeInMillis() && !Thread.currentThread().isInterrupted()) {
+                    long end = to.getTimeInMillis();
+                    to.add(Calendar.DAY_OF_MONTH, -1);
+                    if (to.getTimeInMillis() <= System.currentTimeMillis()) {
+                        adapter.addItem(dataUsage.getDataFromPeriod(to.getTimeInMillis(), end), dateFormat.format(to.getTime()));
                     }
-                } catch (final DataUsage.Error e) {
-                    adapter.clearItems();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(HistoryActivity.this, e.errorId, Toast.LENGTH_LONG).show();
-                        }
-                    });
                 }
-
-                if (Thread.currentThread().isInterrupted()) return;
-
-                //notify
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        view_loading.setVisibility(View.GONE);
-                    }
-                });
+            } catch (final DataUsage.Error e) {
+                adapter.clearItems();
+                runOnUiThread(() -> Toast.makeText(HistoryActivity.this, e.errorId, Toast.LENGTH_LONG).show());
             }
+
+            if (Thread.currentThread().isInterrupted()) return;
+
+            //notify
+            runOnUiThread(() -> {
+                adapter.notifyDataSetChanged();
+                view_loading.setVisibility(View.GONE);
+            });
         });
         thread_setPeriod.start();
 

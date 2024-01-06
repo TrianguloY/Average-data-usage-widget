@@ -24,6 +24,7 @@ public class Main extends Activity {
 
     /**
      * That function
+     *
      * @param savedInstanceState no idea what this is
      */
     @Override
@@ -32,9 +33,7 @@ public class Main extends Activity {
         setContentView(R.layout.activity_main);
 
         //clickable links
-        for (int id : new int[]{R.id.stt_txt_info} ) {
-            ((TextView) findViewById(id)).setMovementMethod(LinkMovementMethod.getInstance());
-        }
+        ((TextView) findViewById(R.id.stt_txt_info)).setMovementMethod(LinkMovementMethod.getInstance());
 
         preview = findViewById(R.id.m_f_widget);
 
@@ -53,10 +52,11 @@ public class Main extends Activity {
 
     /**
      * A button is clicked
+     *
      * @param view which one
      */
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.m_btn_history:
                 //open history
                 startActivity(new Intent(this, HistoryActivity.class));
@@ -87,7 +87,7 @@ public class Main extends Activity {
             preview.removeAllViews();
             preview.addView(views);
 
-        }catch (Throwable ignore){
+        } catch (Throwable ignore) {
 
             // if exception, disable
             Toast.makeText(this, "Exception detected, disabling tweaks", Toast.LENGTH_LONG).show();

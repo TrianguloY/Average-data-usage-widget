@@ -18,7 +18,7 @@ public class Preferences {
      * SharedPrefs
      */
     private static final String PREF_NAME = "pref";
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public Preferences(Context context) {
         this.sharedPreferences = context.getSharedPreferences(Preferences.PREF_NAME, Context.MODE_PRIVATE);

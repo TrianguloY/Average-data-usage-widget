@@ -1,22 +1,22 @@
 package com.trianguloy.continuousDataUsage.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.Settings;
+import android.text.InputType;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -147,22 +147,12 @@ public class SettingsActivity extends Activity {
         //GB
         CheckBox view_gb = findViewById(R.id.stt_chk_gb);
         view_gb.setChecked(pref.getGB());
-        view_gb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                pref.setGB(b);
-            }
-        });
+        view_gb.setOnCheckedChangeListener((compoundButton, b) -> pref.setGB(b));
 
         //alternate conversion
         final CheckBox view_alternateConversion = findViewById(R.id.stt_chkBx_alternateConversion);
         view_alternateConversion.setChecked(pref.getAltConversion());
-        view_alternateConversion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pref.setAltConversion(view_alternateConversion.isChecked());
-            }
-        });
+        view_alternateConversion.setOnClickListener(view -> pref.setAltConversion(view_alternateConversion.isChecked()));
 
         // accumulated periods
         final NumericEditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
@@ -203,7 +193,7 @@ public class SettingsActivity extends Activity {
         AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
         if (appOps != null) {
             //check permission
-            mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), getPackageName());
+            mode = appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), getPackageName());
         }
         setPermissionState(txt_usageStats, mode == AppOpsManager.MODE_ALLOWED);
     }
@@ -263,14 +253,11 @@ public class SettingsActivity extends Activity {
      */
     private void pickPeriodStart() {
         final DatePickerDialog dialog = new DatePickerDialog(this);
-        dialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                // new date
-                final Calendar cal = PeriodCalendar.from(year, month, day);
-                txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(cal.getTime()));
-                pref.setPeriodStart(cal);
-            }
+        dialog.setOnDateSetListener((datePicker, year, month, day) -> {
+            // new date
+            final Calendar cal = PeriodCalendar.from(year, month, day);
+            txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(cal.getTime()));
+            pref.setPeriodStart(cal);
         });
         // set
         final Calendar cal = pref.getPeriodStart();

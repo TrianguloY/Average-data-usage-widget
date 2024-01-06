@@ -35,12 +35,12 @@ public class DataUsage {
     /**
      * Preferences
      */
-    private Preferences pref;
+    private final Preferences pref;
 
     /**
      * Context
      */
-    private Context cntx;
+    private final Context cntx;
 
 
     //------------ Public --------------

@@ -10,9 +10,9 @@ import com.trianguloy.continuousDataUsage.BuildConfig;
 public class Accumulated {
 
     // objects
-    private Preferences pref;
-    private DataUsage dataUsage;
-    private PeriodCalendar periodCalendar;
+    private final Preferences pref;
+    private final DataUsage dataUsage;
+    private final PeriodCalendar periodCalendar;
 
     public Accumulated(Preferences pref, DataUsage dataUsage, PeriodCalendar periodCalendar) {
         this.pref = pref;
@@ -90,5 +90,4 @@ public class Accumulated {
     public double autoCalculateAccumulated() throws DataUsage.Error {
         return calculateAccumulated(0, -12, true, periodCalendar);
     }
-
 }

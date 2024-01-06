@@ -30,7 +30,7 @@ public class Utils {
     /**
      * for {@link #formatData(Preferences, String, Double...)}
      */
-    private static Pattern pattern = Pattern.compile("\\{(.)\\}");
+    private static final Pattern pattern = Pattern.compile("\\{(.)\\}");
 
     /**
      * Custom formatter based on the preferences.
@@ -100,7 +100,7 @@ public class Utils {
      */
     public static void updateAllWidgets(Context context) {
         AppWidgetManager man = AppWidgetManager.getInstance(context);
-        for (Class cls : new Class[]{AppWidgetProgress.class, AppWidgetRate.class}) {
+        for (Class<?> cls : new Class[]{AppWidgetProgress.class, AppWidgetRate.class}) {
             Intent updateIntent = new Intent(context, cls);
             updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, man.getAppWidgetIds(new ComponentName(context, cls)));

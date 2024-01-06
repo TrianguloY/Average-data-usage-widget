@@ -18,8 +18,8 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
      */
     private static final String ID_PREFIX = "tweak_";
 
-    private Preferences prefs;
-    private Context cntx;
+    private final Preferences prefs;
+    private final Context cntx;
 
     /**
      * Tweak items.
