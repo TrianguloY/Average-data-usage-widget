@@ -107,12 +107,12 @@ public class Accumulated {
     }
 
     /**
-     * Tries to calculate the accumulated data of the previous period from the latest 12 periods (ignoring empty)
+     * Tries to calculate the accumulated data of the previous period from the latest 100 periods (ignoring empty)
      *
      * @return calculated accumulated data
      * @throws DataUsage.Error if can't get data
      */
     public double autoCalculateAccumulated() throws DataUsage.Error {
-        return calculateAccumulated(0, -12, true, periodCalendar);
+        return calculateAccumulated(0, -100, true, periodCalendar);
     }
 }

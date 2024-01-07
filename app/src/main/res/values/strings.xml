@@ -40,13 +40,13 @@
     <string name="chkbx_setting_altConv">Use alternate MB conversion</string>
     <string name="settings_mb">MB</string>
     <string name="txt_settings_accum">Accumulated periods:\nNumber of periods that unused data is saved to future periods. If zero, unused data is lost when changing period. If not, the unused megas from the previous n periods will be spent before the current ones (will show a \'negative\' usage until then). Example: if your data provider \'accumulates megas from the past three months\' (with a monthly period) enter 3.</string>
-    <string name="txt_settings_accum_extra">Acumulated megas:\nMegas accumulated from the previous period. This value will auto-update each time the current period changes, but if you are enabling this for the first time you must enter manually the accumulated megas from the previous period (check your data provider). Alternatively you can press the button for an automatic computation (better check it afterwards). You can edit it at any time.</string>
+    <string name="txt_settings_accum_extra">Acumulated megas:\nMegas accumulated from the previous period. This value will auto-update each time the current period changes, but if you are enabling this for the first time you must enter manually the accumulated megas from the previous period (check your data provider). Alternatively you can press the button to configure using different methods. You can edit it at any time.</string>
     <string name="btn_settings_accum">Calculate</string>
     <string name="months">Months</string>
     <string name="days">Days</string>
     <string-array name="itms_settings_accum">
-        <item>Automatic</item>
-        <item>Visible</item>
+        <item>Set automatically finding month without usage (better check it afterwards)</item>
+        <item>Set visible value</item>
     </string-array>
     <string name="txt_visible_title">Current value</string>
     <string name="txt_visible_message">Set here what the widget should display, and the data will be set accordingly</string>
