@@ -42,14 +42,47 @@
 
         <Button
             android:id="@+id/stt_btn_usageStats"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
-            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:text="@string/btn_permission_usageStats" />
 
+        <LinearLayout
+            android:id="@+id/ll_notif"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="@dimen/activity_margin"
+                android:src="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/stt_txt_perm_notif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_desc_permission_phoneState" />
+
+            <TextView
+                android:id="@+id/stt_txt_notif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_error_noPermisionState"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/stt_btn_notif"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="@string/btn_permissionAsk" />
+        </LinearLayout>
+
         <ImageView
-            android:id="@+id/bigseparator2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/activity_margin"
@@ -98,14 +131,12 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/smallSeparator2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="@dimen/activity_margin"
             android:src="@color/colorAccent" />
 
         <TextView
-            android:id="@+id/textView8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/txt_desc_setting_periodInfo" />
@@ -135,7 +166,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/txt_desc_setting_periodStart" />

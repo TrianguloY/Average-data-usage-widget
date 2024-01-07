@@ -1,12 +1,15 @@
 package com.trianguloy.continuousDataUsage.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.Settings;
@@ -18,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,6 +54,8 @@ public class SettingsActivity extends Activity {
     private NumericEditText view_accumulated;
     private TextView view_txt_decimals;
     private EditText txt_periodStart;
+    private TextView txt_notif;
+    private LinearLayout ll_notif;
     private TextView txt_usageStats;
 
 
@@ -68,6 +74,8 @@ public class SettingsActivity extends Activity {
         accumulated = new Accumulated(pref, new DataUsage(this, pref), new PeriodCalendar(pref));
 
         // get views
+        txt_notif = findViewById(R.id.stt_txt_notif);
+        ll_notif = findViewById(R.id.ll_notif);
         txt_usageStats = findViewById(R.id.stt_txt_usageStats);
 
         //initializes
@@ -177,21 +185,31 @@ public class SettingsActivity extends Activity {
             //check permission
             mode = appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), getPackageName());
         }
-        setPermissionState(txt_usageStats, mode == AppOpsManager.MODE_ALLOWED);
+        setPermissionState(txt_usageStats, mode == AppOpsManager.MODE_ALLOWED, true);
+
+        // notifications permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            setPermissionState(txt_notif, checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED, false);
+            ll_notif.setVisibility(View.VISIBLE);
+        } else {
+            ll_notif.setVisibility(View.GONE);
+        }
     }
 
 
     /**
      * Updates the specified id with the specified state.
      * state=true -> green and 'permission granted'
-     * state=false -> red and 'permission needed'
-     *
-     * @param txt   textview to update
-     * @param state the state
+     * state=false && !required -> orange and 'permission not granted'
+     * state=false && required -> red and 'permission needed'
      */
-    private void setPermissionState(TextView txt, boolean state) {
-        txt.setText(state ? getString(R.string.txt_permissionGranted) : getString(R.string.txt_permissionsNeeded));
-        txt.setBackgroundColor(state ? Color.argb(128, 0, 255, 0) : Color.argb(128, 255, 0, 0));
+    private void setPermissionState(TextView txt, boolean granted, boolean required) {
+        txt.setText(granted ? getString(R.string.txt_permissionGranted)
+                : required ? getString(R.string.txt_permissionNeeded)
+                : getString(R.string.txt_permissionNotGranted));
+        txt.setBackgroundColor(granted ? Color.argb(128, 0, 255, 0) // green
+                : required ? Color.argb(128, 255, 0, 0) // orange
+                : Color.argb(128, 255, 127, 0)); // red
     }
 
 
@@ -202,26 +220,21 @@ public class SettingsActivity extends Activity {
      */
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.stt_btn_usageStats:
-                //open usage settings to give permission
-                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-                break;
-
-            case R.id.stt_edTxt_periodStart:
-                // start date picker
-                pickPeriodStart();
-                break;
-
-            case R.id.stt_btn_accum:
+            //open usage settings to give permission
+            case R.id.stt_btn_usageStats -> startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            //request 'notifications permission' button, request permission
+            case R.id.stt_btn_notif -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                    requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
+            }
+            // start date picker
+            case R.id.stt_edTxt_periodStart -> pickPeriodStart();
+            case R.id.stt_btn_accum -> {
                 //auto-calculate accumulated
                 calculate();
-                // update if necessary
-                txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(pref.getPeriodStart().getTime()));
-                break;
-            case R.id.stt_btn_tweaks:
-                // show tweaks
-                new Tweaks(pref, this).showDialog();
-                break;
+            }
+            // show tweaks
+            case R.id.stt_btn_tweaks -> new Tweaks(pref, this).showDialog();
         }
     }
 
@@ -233,19 +246,22 @@ public class SettingsActivity extends Activity {
                 .setTitle(R.string.btn_settings_accum)
                 .setItems(R.array.itms_settings_accum, (dialog, which) -> {
                     try {
-                        switch (which){
-                            case 0:
+                        switch (which) {
+                            case 0 -> {
                                 view_accumulated.setValue((float) accumulated.autoCalculateAccumulated());
-                                break;
-                            case 1:
-                                setVisibleData();
-                                break;
+
+                                // update if necessary
+                                txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(pref.getPeriodStart().getTime()));
+                            }
+                            case 1 -> setVisibleData();
                         }
                     } catch (DataUsage.Error e) {
                         Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                     }
                 })
                 .show();
+
+
     }
 
     /**
@@ -278,6 +294,9 @@ public class SettingsActivity extends Activity {
                     } catch (DataUsage.Error e) {
                         Toast.makeText(this, getString(e.errorId), Toast.LENGTH_LONG).show();
                     }
+
+                    // update if necessary
+                    txt_periodStart.setText(SimpleDateFormat.getDateInstance().format(pref.getPeriodStart().getTime()));
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
@@ -320,15 +339,10 @@ public class SettingsActivity extends Activity {
 
     /**
      * After requesting permissions, updates views accordingly.
-     *
-     * @param i not used
-     * @param s not used
-     * @param j not used
      */
     @Override
     public void onRequestPermissionsResult(int i, String[] s, int[] j) {
         updateViews();
     }
-
 
 }

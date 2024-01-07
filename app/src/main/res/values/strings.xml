@@ -17,12 +17,13 @@
 
     <!-- permissions -->
     <string name="txt_title_permissions">Permissions:</string>
-    <string name="txt_desc_permission_phoneState">READ_PHONE_STATE:\nPermission needed to get the <a href="https://developer.android.com/reference/android/telephony/TelephonyManager.html#getSubscriberId()">device identificator</a>. No other data is retrieved nor used. Click the button below to give the permission if necessary.</string>
-    <string name="btn_permission_phoneState">Ask permission</string>
+    <string name="txt_desc_permission_phoneState">NOTIFICATIONS:\nIn order to display a small notification when clicking the widget (toast) you need to allow notifications. The app will not send any standard notification.</string>
+    <string name="btn_permissionAsk">Ask permission</string>
     <string name="txt_desc_permission_usageStats">PACKAGE_USAGE_STATS:\nPermission needed to get the current usage from the <a href="https://developer.android.com/reference/android/app/usage/NetworkStatsManager.html#querySummaryForDevice(int,%20java.lang.String,%20long,%20long)">usage service</a>. No other data is retrieved nor used. If required click the button below, select this app and enable the permission.</string>
     <string name="btn_permission_usageStats">Usage Stats settings</string>
     <string name="txt_permissionGranted">Permission granted</string>
-    <string name="txt_permissionsNeeded">Permission needed</string>
+    <string name="txt_permissionNotGranted">Permission not granted</string>
+    <string name="txt_permissionNeeded">Permission needed</string>
     <string name="txt_error_noPermisionState">Error while getting permission state</string>
 
 
