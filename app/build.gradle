@@ -1,11 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace 'com.trianguloy.continuousDataUsage'
     compileSdk 33
     defaultConfig {
         applicationId "com.trianguloy.continuousDataUsage"
         minSdkVersion 29
         targetSdkVersion 33
+        versionCode 24
+        versionName "3.0"
     }
     buildTypes {
         release {
@@ -14,7 +17,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'com.trianguloy.continuousDataUsage'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
