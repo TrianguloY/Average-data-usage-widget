@@ -14,7 +14,6 @@
     tools:layout_editor_absoluteY="0dp">
 
     <GridLayout
-        android:id="@+id/wdg_main"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

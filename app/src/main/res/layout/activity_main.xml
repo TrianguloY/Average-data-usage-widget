@@ -46,7 +46,6 @@
             android:layout_height="25dp" />
 
         <TextView
-            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/txt_title_info"
@@ -70,7 +69,6 @@
         </com.trianguloy.continuousDataUsage.common.NonTouchableView>
 
         <TextView
-            android:id="@+id/stt_txt_info2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/txt_desc_widget"
