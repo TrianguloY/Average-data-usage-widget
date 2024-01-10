@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.TaskStackBuilder;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -128,13 +129,7 @@ public class HistoryActivity extends Activity {
                 return true;
             case R.id.h_action_android:
                 //open android usage screen
-                Intent settings = new Intent(Intent.ACTION_MAIN);
-                settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
-                try {
-                    startActivity(settings);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, R.string.toast_activityNotFound, Toast.LENGTH_LONG).show();
-                }
+                openAndroidUsageScreen(this);
                 return true;
             case android.R.id.home:
                 //explicitly go back to main activity
@@ -147,6 +142,17 @@ public class HistoryActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void openAndroidUsageScreen(Context cntx) {
+        Intent settings = new Intent(Intent.ACTION_MAIN);
+        settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
+        settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            cntx.startActivity(settings);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(cntx, R.string.toast_activityNotFound, Toast.LENGTH_LONG).show();
+        }
     }
 
     // reload period

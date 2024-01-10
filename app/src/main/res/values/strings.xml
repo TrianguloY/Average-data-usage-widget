@@ -78,5 +78,6 @@
     <string name="tweak_showRemaining">Show remaining data instead of consumed data (bars will move from 100% to 0% instead of 0% to 100%)</string>
     <string name="tweak_capNoWarp">"Keep bar at 100% instead of warping (in case your device doesn't show the secondary bar)"</string>
     <string name="tweak_advancedSecondary">The secondary progress adapts dynamically.</string>
+    <string name="tweak_androidUsageButton">Open android usage screen when pressing the widget button.</string>
 
 </resources>

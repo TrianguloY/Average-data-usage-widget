@@ -36,6 +36,7 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
         showRemaining,
         advancedSecondary,
         capNoWarp,
+        androidUsageButton,
     }
 
     // ------------------- Tweaks -------------------

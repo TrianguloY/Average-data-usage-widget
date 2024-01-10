@@ -78,16 +78,22 @@ abstract class AppWidgetBase extends AppWidgetProvider {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
+        var prefs = new Preferences(context);
+
         switch (intent.getIntExtra(EXTRA_ACTION, -1)) {
             case ACTION_USAGE:
-                //open the history activity
-                Intent usage = new Intent(context, HistoryActivity.class);
-                usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(usage);
+                if (prefs.getTweak(Tweaks.Tweak.androidUsageButton)) {
+                    HistoryActivity.openAndroidUsageScreen(context);
+                } else {
+                    //open the history activity
+                    Intent usage = new Intent(context, HistoryActivity.class);
+                    usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(usage);
+                }
                 break;
             case ACTION_INFO:
                 //info requested, set flag
-                new Preferences(context).infoRequested();
+                prefs.infoRequested();
             default:
                 super.onReceive(context, intent);
                 break;
