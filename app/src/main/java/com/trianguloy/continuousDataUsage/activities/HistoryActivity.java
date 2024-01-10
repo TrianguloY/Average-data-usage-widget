@@ -197,18 +197,32 @@ public class HistoryActivity extends Activity {
 
         thread_setPeriod = new Thread(() -> {
 
+            // set period&average
+            adapter.setTotalData(pref.getTotalData());
             adapter.setDataPerDay(
                     pref.getTotalData() / Math.round((to.getTimeInMillis() - from) / 1000d / 60d / 60d / 24d)
             );
 
+            var periodData = 0D;
+
             try {
+                // each day
                 while (from < to.getTimeInMillis() && !Thread.currentThread().isInterrupted()) {
                     long end = to.getTimeInMillis();
                     to.add(Calendar.DAY_OF_MONTH, -1);
                     if (to.getTimeInMillis() <= System.currentTimeMillis()) {
-                        adapter.addItem(dataUsage.getDataFromPeriod(to.getTimeInMillis(), end), dateFormat.format(to.getTime()));
+                        var dayData = dataUsage.getDataFromPeriod(to.getTimeInMillis(), end);
+                        adapter.addAverageItem(dayData, dateFormat.format(to.getTime()));
+                        periodData += dayData;
                     }
                 }
+
+                adapter.addSeparator();
+
+                // average & total
+                adapter.addAverageItem(periodData / adapter.getTempsCount(), getString(R.string.txt_average));
+                adapter.addTotalItem(periodData, getString(R.string.txt_total));
+
             } catch (final DataUsage.Error e) {
                 adapter.clearItems();
                 runOnUiThread(() -> Toast.makeText(HistoryActivity.this, e.errorId, Toast.LENGTH_LONG).show());

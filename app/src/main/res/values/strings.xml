@@ -13,6 +13,8 @@
     <string name="h_toast_info">This screen shows the usage on each day of the period related to the average one.\n\nA bar to the right means the usage was greater than the average, a bar to the left means the opposite.\n\nUse the buttons to change the period.</string>
     <string name="menu_title_info">Info</string>
     <string name="menu_title_android">Android Usage</string>
+    <string name="txt_average">average</string>
+    <string name="txt_total">total</string>
 
 
     <!-- permissions -->

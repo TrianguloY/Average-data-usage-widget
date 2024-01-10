@@ -21,30 +21,9 @@ import java.util.ArrayList;
 public class ListAdapter extends BaseAdapter {
 
     /**
-     * Each element in the list
+     * total data of the full period
      */
-    class Item {
-        /**
-         * The usage
-         */
-        double usage;
-        /**
-         * The day
-         */
-        String date;
-
-        Item(double usage, String date) {
-            this.usage = usage;
-            this.date = date;
-        }
-
-        /**
-         * @return the usage string
-         */
-        String usageString(){
-            return Utils.formatData(pref, "{0} / {M}", usage, (double) dataPerDay);
-        }
-    }
+    private float totalData;
 
     /**
      * Context used
@@ -68,6 +47,20 @@ public class ListAdapter extends BaseAdapter {
     private float dataPerDay;
 
     /**
+     * Adds an average item, doesn't refresh
+     */
+    void addAverageItem(double usage, String date) {
+        final Item item = new Item(usage, date, Item.Type.AVERAGE);
+        itemsTemp.add(0, item);
+
+        // update max width
+        String text = item.usageString();
+        if (text.length() > dummy_usage_text.length()) {
+            dummy_usage_text = text;
+        }
+    }
+
+    /**
      * Dummy view to extract sizes
      */
     private View dummy;
@@ -87,20 +80,32 @@ public class ListAdapter extends BaseAdapter {
     }
 
     /**
-     * Adds an item, doesn't refresh
-     *
-     * @param usage the usage of the item
-     * @param date  the date of the item
+     * Adds a total item, doesn't refresh
      */
-    void addItem(double usage, String date) {
-        final Item item = new Item(usage, date);
+    void addTotalItem(double usage, String label) {
+        var item = new Item(usage, label, Item.Type.TOTAL);
         itemsTemp.add(0, item);
+
 
         // update max width
         String text = item.usageString();
-        if(text.length() > dummy_usage_text.length()){
+        if (text.length() > dummy_usage_text.length()) {
             dummy_usage_text = text;
         }
+    }
+
+    /**
+     * Adds a separator, doesn't refresh
+     */
+    void addSeparator() {
+        itemsTemp.add(0, new Item(0, "", Item.Type.SEPARATOR));
+    }
+
+    /**
+     * sets the total data
+     */
+    void setTotalData(float totalData) {
+        this.totalData = totalData;
     }
 
     /**
@@ -119,8 +124,14 @@ public class ListAdapter extends BaseAdapter {
     }
 
     /**
+     * Return the count of pending items
+     */
+    public int getTempsCount() {
+        return itemsTemp.size();
+    }
+
+    /**
      * Sets the dummy view
-     * @param dummy dummy view
      */
     public void setDummyView(View dummy) {
         this.dummy = dummy;
@@ -144,13 +155,13 @@ public class ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return items.get(i);
+    public long getItemId(int i) {
+        return items.get(i).label.hashCode();
     }
 
     @Override
-    public long getItemId(int i) {
-        return items.get(i).date.hashCode();
+    public Object getItem(int i) {
+        return items.get(i);
     }
 
     @Override
@@ -178,13 +189,28 @@ public class ListAdapter extends BaseAdapter {
         ProgressBar pgb_positive = convertView.findViewById(R.id.lv_pgb_positive);
         ProgressBar pgb_negative = convertView.findViewById(R.id.lv_pgb_negative);
 
+        if (currentItem.type == Item.Type.SEPARATOR) {
+            // separator, just hide and return
+            txt_date.setVisibility(View.GONE);
+            txt_usage.setVisibility(View.GONE);
+            pgb_positive.setVisibility(View.GONE);
+            pgb_negative.setVisibility(View.GONE);
+            return convertView;
+        } else {
+            // non-separator, unhide
+            txt_date.setVisibility(View.VISIBLE);
+            txt_usage.setVisibility(View.VISIBLE);
+            pgb_positive.setVisibility(View.VISIBLE);
+            pgb_negative.setVisibility(View.VISIBLE);
+        }
+
         // sets the properties
-        txt_date.setText(currentItem.date);
+        txt_date.setText(currentItem.label);
         txt_usage.setText(currentItem.usageString());
 
-        double rate = currentItem.usage / dataPerDay;
+        double rate = currentItem.usage / (currentItem.type == Item.Type.TOTAL ? totalData : dataPerDay);
         if (rate > 1) {
-            // more than average
+            // more than average/total
             pgb_negative.setProgress(0);
             pgb_positive.setProgress(Utils.dbl2int((rate % 1) * pgb_positive.getMax()));
             pgb_positive.setSecondaryProgress(rate > 2 ? pgb_positive.getMax() : 0);
@@ -200,10 +226,58 @@ public class ListAdapter extends BaseAdapter {
             // cap
             pgb_positive.setProgress(pgb_positive.getMax());
             pgb_positive.setSecondaryProgress(0);
-
         }
 
         // returns the view for the current row
         return convertView;
+    }
+
+    /**
+     * Each element in the list
+     */
+    class Item {
+        /**
+         * The day
+         */
+        String label;
+
+        /**
+         * The usage
+         */
+        double usage;
+        /**
+         * Type of the row
+         */
+        Type type;
+        Item(double usage, String label, Type type) {
+            this.usage = usage;
+            this.label = label;
+            this.type = type;
+        }
+
+        /**
+         * @return the usage string
+         */
+        String usageString() {
+            return Utils.formatData(pref, "{0} / {M}", usage, (double) (type == Type.TOTAL ? totalData : dataPerDay));
+        }
+
+        /**
+         * Type of the row
+         */
+        enum Type {
+            /**
+             * An average value
+             */
+            AVERAGE,
+            /**
+             * A total value
+             */
+            TOTAL,
+            /**
+             * A separator
+             */
+            SEPARATOR
+        }
     }
 }
