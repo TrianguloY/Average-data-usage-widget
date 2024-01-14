@@ -38,6 +38,8 @@
     <string name="txt_settings_decimals">Decimals:\nNumber of decimals that data numbers will display.</string>
     <string name="txt_settings_gb">MB or GB:</string>
     <string name="chk_settings_gb">Display data in GB instead of MB.</string>
+    <string name="txt_settings_inv">Pending/Used:</string>
+    <string name="chk_settings_inv">Show pending data (bars will decrease from 100% to 0%) instead of the default used data (bars increase from 0% to 100%).</string>
     <string name="txt_desc_setting_altConv">Alternate conversion:\nCheck this if data usage shown is always less than real usage returned by your company app. [Technical details: uses 1000 instead of 1024 to convert from bytes to megabytes]</string>
     <string name="chkbx_setting_altConv">Use alternate MB conversion</string>
     <string name="settings_mb">MB</string>

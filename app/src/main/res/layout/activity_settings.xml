@@ -230,6 +230,25 @@
             android:src="@color/colorAccent" />
 
         <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_settings_inv" />
+
+        <CheckBox
+            android:id="@+id/stt_chk_inv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/chk_settings_inv" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="@dimen/activity_margin"
+            android:src="@color/colorAccent" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/txt_desc_setting_altConv" />

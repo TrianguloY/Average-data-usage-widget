@@ -142,12 +142,17 @@ public class SettingsActivity extends Activity {
         view_sb_decimals.setProgress(pref.getDecimals(), false); // setProgress may not update if the value is the same
         view_txt_decimals.setText(Integer.toString(pref.getDecimals()));
 
-        //GB
+        // GB
         CheckBox view_gb = findViewById(R.id.stt_chk_gb);
         view_gb.setChecked(pref.getGB());
         view_gb.setOnCheckedChangeListener((compoundButton, b) -> pref.setGB(b));
 
-        //alternate conversion
+        // inv
+        var view_inv = this.<CheckBox>findViewById(R.id.stt_chk_inv);
+        view_inv.setChecked(pref.getInv());
+        view_inv.setOnCheckedChangeListener((compoundButton, b) -> pref.setInv(b));
+
+        // alternate conversion
         final CheckBox view_alternateConversion = findViewById(R.id.stt_chkBx_alternateConversion);
         view_alternateConversion.setChecked(pref.getAltConversion());
         view_alternateConversion.setOnClickListener(view -> pref.setAltConversion(view_alternateConversion.isChecked()));
@@ -160,7 +165,7 @@ public class SettingsActivity extends Activity {
         view_accumulated = findViewById(R.id.stt_edTxt_accum);
         view_accumulated.initFloat(true, true, pref.getAccumulated(), number -> pref.setAccumulated(number));
 
-        //clickable links
+        // clickable links
         ((TextView) findViewById(R.id.stt_txt_perm_us)).setMovementMethod(LinkMovementMethod.getInstance());
 
     }
@@ -266,7 +271,8 @@ public class SettingsActivity extends Activity {
 
         double data = accumulated.getUsedDataFromCurrentPeriod();
 
-        if (pref.getTweak(Tweaks.Tweak.showRemaining)) {
+        // invert data
+        if (pref.getInv()) {
             data = pref.getTotalData() - data;
         }
 
@@ -280,7 +286,8 @@ public class SettingsActivity extends Activity {
                 .setView(txt)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
 
-                    if (pref.getTweak(Tweaks.Tweak.showRemaining)) {
+                    // re-invert data
+                    if (pref.getInv()) {
                         input[0] = pref.getTotalData() - input[0];
                     }
 

@@ -176,8 +176,8 @@ abstract class AppWidgetBase extends AppWidgetProvider {
                     millisToInterval(cal.getTimeInMillis() - currentMillis)), Toast.LENGTH_LONG).show();
         }
 
-        // tweaks
-        if (pref.getTweak(Tweaks.Tweak.showRemaining)) {
+        // invert data
+        if (pref.getInv()) {
             returnedInfo.percentData = 1 - returnedInfo.percentData;
             returnedInfo.megabytes = returnedInfo.totalData - returnedInfo.megabytes;
             returnedInfo.percentDate = 1 - returnedInfo.percentDate;

@@ -20,43 +20,7 @@ public class Preferences {
     private static final String PREF_NAME = "pref";
     private final SharedPreferences sharedPreferences;
 
-    public Preferences(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(Preferences.PREF_NAME, Context.MODE_PRIVATE);
-
-        // updates
-        final String KEY_ACCUMULATE = "accumulate";
-        if (sharedPreferences.contains(KEY_ACCUMULATE)) {
-            // accumulate=true/false -> savedPeriods=1/0
-            setSavedPeriods(sharedPreferences.getBoolean(KEY_ACCUMULATE, false) ? 1 : 0);
-            sharedPreferences.edit().remove(KEY_ACCUMULATE).apply();
-        }
-
-        final String KEY_FIRSTDAY = "firstDay";
-        if (sharedPreferences.contains(KEY_FIRSTDAY)) {
-            // firstDay=n -> periodStart=today(day=n)
-            Calendar cal = PeriodCalendar.today();
-            cal.set(Calendar.DAY_OF_MONTH, sharedPreferences.getInt(KEY_FIRSTDAY, 0));
-            if (System.currentTimeMillis() < cal.getTimeInMillis()) {
-                cal.add(Calendar.MONTH, -1);
-            }
-            setPeriodStart(cal);
-            sharedPreferences.edit().remove(KEY_FIRSTDAY).apply();
-        }
-
-        final String KEY_ACCUMULATEDM = "accumulatedm";
-        if (sharedPreferences.contains(KEY_ACCUMULATEDM)) {
-            // accumulated month -> shift current month
-            int diff = (getPeriodStart().get(Calendar.MONTH) - sharedPreferences.getInt(KEY_ACCUMULATEDM, 0) + 12) % 12;
-            if (diff != 0) {
-                Calendar cal = getPeriodStart();
-                cal.add(Calendar.MONTH, -diff);
-                setPeriodStart(cal);
-            }
-            sharedPreferences.edit().remove(KEY_ACCUMULATEDM).apply();
-        }
-
-//        sharedPreferences.edit().clear().apply();
-    }
+    private static final String KEY_INV = "inverse";
 
 
     /**
@@ -214,6 +178,59 @@ public class Preferences {
 
     public void setGB(boolean gb) {
         sharedPreferences.edit().putBoolean(KEY_GB, gb).apply();
+    }
+    private static final boolean DEFAULT_INV = false;
+    public Preferences(Context context) {
+        this.sharedPreferences = context.getSharedPreferences(Preferences.PREF_NAME, Context.MODE_PRIVATE);
+
+        // updates
+        final String KEY_ACCUMULATE = "accumulate";
+        if (sharedPreferences.contains(KEY_ACCUMULATE)) {
+            // accumulate=true/false -> savedPeriods=1/0
+            setSavedPeriods(sharedPreferences.getBoolean(KEY_ACCUMULATE, false) ? 1 : 0);
+            sharedPreferences.edit().remove(KEY_ACCUMULATE).apply();
+        }
+
+        final String KEY_FIRSTDAY = "firstDay";
+        if (sharedPreferences.contains(KEY_FIRSTDAY)) {
+            // firstDay=n -> periodStart=today(day=n)
+            Calendar cal = PeriodCalendar.today();
+            cal.set(Calendar.DAY_OF_MONTH, sharedPreferences.getInt(KEY_FIRSTDAY, 0));
+            if (System.currentTimeMillis() < cal.getTimeInMillis()) {
+                cal.add(Calendar.MONTH, -1);
+            }
+            setPeriodStart(cal);
+            sharedPreferences.edit().remove(KEY_FIRSTDAY).apply();
+        }
+
+        final String KEY_ACCUMULATEDM = "accumulatedm";
+        if (sharedPreferences.contains(KEY_ACCUMULATEDM)) {
+            // accumulated month -> shift current month
+            int diff = (getPeriodStart().get(Calendar.MONTH) - sharedPreferences.getInt(KEY_ACCUMULATEDM, 0) + 12) % 12;
+            if (diff != 0) {
+                Calendar cal = getPeriodStart();
+                cal.add(Calendar.MONTH, -diff);
+                setPeriodStart(cal);
+            }
+            sharedPreferences.edit().remove(KEY_ACCUMULATEDM).apply();
+        }
+
+        var KEY_REMAINING = "showRemaining";
+        if (sharedPreferences.contains(KEY_REMAINING)) {
+            // show remaining tweak -> show inv
+            setInv(sharedPreferences.getBoolean(KEY_REMAINING, false));
+            sharedPreferences.edit().remove(KEY_REMAINING).apply();
+        }
+
+//        sharedPreferences.edit().clear().apply();
+    }
+
+    public boolean getInv() {
+        return sharedPreferences.getBoolean(KEY_INV, DEFAULT_INV);
+    }
+
+    public void setInv(boolean inv) {
+        sharedPreferences.edit().putBoolean(KEY_INV, inv).apply();
     }
 
     // ------------------- tweaks -------------------
