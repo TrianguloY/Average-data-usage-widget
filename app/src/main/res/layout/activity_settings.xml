@@ -260,49 +260,40 @@
             android:gravity="center"
             android:inputType="number" />
 
-        <LinearLayout
-            android:id="@+id/ll_accum"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_settings_accum_extra" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <com.trianguloy.continuousDataUsage.common.NumericEditText
+                android:id="@+id/stt_edTxt_accum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="number|numberDecimal|numberSigned" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_settings_accum_extra" />
+                android:text="@string/settings_mb"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <com.trianguloy.continuousDataUsage.common.NumericEditText
-                    android:id="@+id/stt_edTxt_accum"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:inputType="number|numberDecimal|numberSigned" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_mb"
-                    android:textAllCaps="false"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/stt_btn_accum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onClick"
-                    style="@android:style/Widget.DeviceDefault.Button.Borderless"
-                    android:text="@string/btn_settings_accum" />
-            </LinearLayout>
-
+            <Button
+                android:id="@+id/stt_btn_accum"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="@string/btn_settings_accum" />
         </LinearLayout>
 
         <ImageView

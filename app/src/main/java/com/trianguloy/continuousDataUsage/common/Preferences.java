@@ -140,7 +140,7 @@ public class Preferences {
         return sharedPreferences.getInt(KEY_PERIODTYPE, DEFAULT_PERIODTYPE);
     }
 
-    public void setPeriodtype(int periodType) {
+    public void setPeriodType(int periodType) {
         sharedPreferences.edit().putInt(KEY_PERIODTYPE, periodType).apply();
     }
 

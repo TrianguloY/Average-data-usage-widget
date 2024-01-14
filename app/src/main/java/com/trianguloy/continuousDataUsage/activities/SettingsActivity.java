@@ -109,12 +109,12 @@ public class SettingsActivity extends Activity {
         spn_periodType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                pref.setPeriodtype(periodTypes.get(i));
+                pref.setPeriodType(periodTypes.get(i));
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                pref.setPeriodtype(periodTypes.get(0));
+                pref.setPeriodType(periodTypes.get(0));
             }
         });
 
@@ -154,12 +154,7 @@ public class SettingsActivity extends Activity {
 
         // accumulated periods
         final NumericEditText view_sb_savedPeriods = findViewById(R.id.stt_edTxt_savedPeriods);
-        final View view_ll = findViewById(R.id.ll_accum);
-        view_ll.setVisibility(pref.getSavedPeriods() > 0 ? View.VISIBLE : View.GONE);
-        view_sb_savedPeriods.initInt(true, false, pref.getSavedPeriods(), number -> {
-            pref.setSavedPeriods(number);
-            view_ll.setVisibility(number > 0 ? View.VISIBLE : View.GONE);
-        });
+        view_sb_savedPeriods.initInt(true, false, pref.getSavedPeriods(), number -> pref.setSavedPeriods(number));
 
         // accumulated megas
         view_accumulated = findViewById(R.id.stt_edTxt_accum);

@@ -42,7 +42,7 @@
     <string name="chkbx_setting_altConv">Use alternate MB conversion</string>
     <string name="settings_mb">MB</string>
     <string name="txt_settings_accum">Accumulated periods:\nNumber of periods that unused data is saved to future periods. If zero, unused data is lost when changing period. If not, the unused megas from the previous n periods will be spent before the current ones (will show a \'negative\' usage until then). Example: if your data provider \'accumulates megas from the past three months\' (with a monthly period) enter 3.</string>
-    <string name="txt_settings_accum_extra">Acumulated megas:\nMegas accumulated from the previous period. This value will auto-update each time the current period changes, but if you are enabling this for the first time you must enter manually the accumulated megas from the previous period (check your data provider). Alternatively you can press the button to configure using different methods. You can edit it at any time.</string>
+    <string name="txt_settings_accum_extra">Acumulated megas/Data offset:\nMegas accumulated from the previous period, (general offset data). This value will be added to the available data in your current period. You can use it to offset the displayed value (enter negative to subtract available data).\nThis value will auto-update each time the current period changes, but if you are enabling this for the first time you may want to manually enter the accumulated megas from the previous period (check your data provider). Alternatively you can press the button to configure using different helpers. You can edit it at any time.</string>
     <string name="btn_settings_accum">Calculate</string>
     <string name="months">Months</string>
     <string name="days">Days</string>
@@ -68,7 +68,7 @@
 
     <!-- tweaks -->
     <string name="btn_tweaks">Tweaks</string>
-    <string name="desc_tweaks">List of experimental settings to tweak some properties of widgets (may be added/removed in future versions if necessary). Some combinations may not work together or show unwanted results (like \'hide date\'+\'hide data\' which will show an empty widget) but they are safe to enable/disable so have fun tweaking as you want.\n\nImportant! Existing widgets may need to be clicked or removed/added to update.</string>
+    <string name="desc_tweaks">Tweaks:\nList of experimental settings to tweak some properties of widgets (may be added/removed in future versions if necessary). Some combinations may not work together or show unwanted results (like \'hide date\'+\'hide data\' which will show an empty widget) but they are safe to enable/disable so have fun tweaking as you want.\n\nImportant! Existing widgets may need to be clicked or removed/added to update.</string>
     <string name="btn_close">close</string>
     <string name="tweak_hideDate">Hide date bar and text (the top one)</string>
     <string name="tweak_hideData">Hide data bar and text (the bottom one)</string>
