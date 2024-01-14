@@ -26,6 +26,7 @@ Please note that the current consumption is measured by your device and may diff
 Permissions:
 - PACKAGE_USAGE_STATS - Permission needed to get the current usage from the usage service. No other data is retrieved nor used.
 More info here: https://developer.android.com/reference/android/app/usage/NetworkStatsManager.html#querySummaryForDevice(int,%20java.lang.String,%20long,%20long)
+- POST_NOTIFICATIONS - Permission needed to show a small message at the bottom of the screen (toast) when pressing the widget. The app does not send any standard notification.
 
 NOTE: there is no internet permission, there are no ads so it is not necessary.
 

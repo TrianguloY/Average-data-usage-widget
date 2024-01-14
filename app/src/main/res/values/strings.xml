@@ -10,7 +10,7 @@
 
     <!-- History viewer -->
     <string name="h_title">History Viewer</string>
-    <string name="h_toast_info">This screen shows the usage on each day of the period related to the average one.\n\nA bar to the right means the usage was greater than the average, a bar to the left means the opposite.\n\nUse the buttons to change the period.</string>
+    <string name="h_toast_info">This screen shows the usage on each day of the period related to the average one.\n\nA bar to the right means the usage was greater than the average, a bar to the left means the opposite.\n\nYou can also see the average and total usage of the full period.\n\nUse the buttons to change the period.</string>
     <string name="menu_title_info">Info</string>
     <string name="menu_title_android">Android Usage</string>
     <string name="txt_average">average</string>
@@ -19,7 +19,7 @@
 
     <!-- permissions -->
     <string name="txt_title_permissions">Permissions:</string>
-    <string name="txt_desc_permission_phoneState">NOTIFICATIONS:\nIn order to display a small notification when clicking the widget (toast) you need to allow notifications. The app will not send any standard notification.</string>
+    <string name="txt_desc_permission_phoneState">NOTIFICATIONS:\nIn order to display a small message at the bottom of the screen (toast) when clicking the widget, Android requires now to allow notifications. The app will not send any standard notification.</string>
     <string name="btn_permissionAsk">Ask permission</string>
     <string name="txt_desc_permission_usageStats">PACKAGE_USAGE_STATS:\nPermission needed to get the current usage from the <a href="https://developer.android.com/reference/android/app/usage/NetworkStatsManager.html#querySummaryForDevice(int,%20java.lang.String,%20long,%20long)">usage service</a>. No other data is retrieved nor used. If required click the button below, select this app and enable the permission.</string>
     <string name="btn_permission_usageStats">Usage Stats settings</string>
