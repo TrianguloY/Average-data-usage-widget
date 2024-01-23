@@ -204,15 +204,19 @@ public class HistoryActivity extends Activity {
             );
 
             var periodData = 0D;
+            var days = 0;
 
             try {
                 // each day
-                while (from < to.getTimeInMillis() && !Thread.currentThread().isInterrupted()) {
+                while (from < to.getTimeInMillis()) {
+                    if (Thread.currentThread().isInterrupted()) return;
+
                     long end = to.getTimeInMillis();
                     to.add(Calendar.DAY_OF_MONTH, -1);
                     if (to.getTimeInMillis() <= System.currentTimeMillis()) {
                         var dayData = dataUsage.getDataFromPeriod(to.getTimeInMillis(), end);
                         adapter.addAverageItem(dayData, dateFormat.format(to.getTime()));
+                        days++;
                         periodData += dayData;
                     }
                 }
@@ -220,10 +224,11 @@ public class HistoryActivity extends Activity {
                 adapter.addSeparator();
 
                 // average & total
-                adapter.addAverageItem(periodData / adapter.getTempsCount(), getString(R.string.txt_average));
+                adapter.addAverageItem(periodData / days, getString(R.string.txt_average));
                 adapter.addTotalItem(periodData, getString(R.string.txt_total));
 
             } catch (final DataUsage.Error e) {
+                if (Thread.currentThread().isInterrupted()) return;
                 adapter.clearItems();
                 runOnUiThread(() -> Toast.makeText(HistoryActivity.this, e.errorId, Toast.LENGTH_LONG).show());
             }

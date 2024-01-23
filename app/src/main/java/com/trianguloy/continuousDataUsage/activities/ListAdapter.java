@@ -124,13 +124,6 @@ public class ListAdapter extends BaseAdapter {
     }
 
     /**
-     * Return the count of pending items
-     */
-    public int getTempsCount() {
-        return itemsTemp.size();
-    }
-
-    /**
      * Sets the dummy view
      */
     public void setDummyView(View dummy) {
