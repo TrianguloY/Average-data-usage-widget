@@ -1,4 +1,7 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'com.github.triplet.play' version '3.7.0'
+}
 
 android {
     namespace 'com.trianguloy.continuousDataUsage'
@@ -29,4 +32,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+
+play {
+    track.set("beta")
+    releaseName.set(android.defaultConfig.versionName + " (" + android.defaultConfig.versionCode + ")")
 }
