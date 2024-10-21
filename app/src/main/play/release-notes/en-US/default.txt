@@ -1,10 +1,13 @@
-v 4.0
+V 4.1
+- Added Russian translation. Thank you kojjii!
+
+V 4.0
 - Updated to Android 10+
 - New: Average and total data on the history screen
 - Tweak: Remaining tweak promoted to full setting (Pending/Used)
 - New: Option to calculate accumulated data by setting the desired visible amount
-- Improv: Accumulated data can be negative
-- Improv: Accumulated data can be set while accumulated period is 0 (as offset data)
+- Improve: Accumulated data can be negative
+- Improve: Accumulated data can be set while accumulated period is 0 (as offset data)
 - New: Tweak: open android settings when clicking the widget button
 
 V 3.0
