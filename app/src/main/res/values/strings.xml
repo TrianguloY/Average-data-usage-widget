@@ -83,5 +83,6 @@
     <string name="tweak_capNoWarp">"Keep bar at 100% instead of warping (in case your device doesn't show the secondary bar)"</string>
     <string name="tweak_advancedSecondary">The secondary progress adapts dynamically.</string>
     <string name="tweak_androidUsageButton">Open android usage screen when pressing the widget button.</string>
+    <string name="tweak_wifiUsage">Get wifi usage, instead of mobile.</string>
 
 </resources>

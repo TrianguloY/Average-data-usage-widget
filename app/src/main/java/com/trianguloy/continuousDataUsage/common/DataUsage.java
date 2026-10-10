@@ -1,13 +1,12 @@
 package com.trianguloy.continuousDataUsage.common;
 
-import android.Manifest;
+import static android.net.ConnectivityManager.TYPE_MOBILE;
+import static android.net.ConnectivityManager.TYPE_WIFI;
+
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.RemoteException;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 
@@ -94,7 +93,8 @@ public class DataUsage {
         //get data
         NetworkStats.Bucket bucket;
         try {
-            bucket = getNsm().querySummaryForDevice(ConnectivityManager.TYPE_MOBILE, null, from, to);
+
+            bucket = getNsm().querySummaryForDevice(pref.getTweak(Tweaks.Tweak.wifiUsage) ? TYPE_WIFI : TYPE_MOBILE, null, from, to);
         } catch (RemoteException e) {
             Log.d("widget", "error on querySummaryForDevice-RemoteException");
             throw new Error(R.string.txt_widget_errorQuering);
