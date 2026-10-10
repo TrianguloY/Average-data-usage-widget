@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.RemoteViews;
@@ -20,6 +22,7 @@ import com.trianguloy.continuousDataUsage.common.Tweaks;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.Executors;
 
 /**
  * Implementation of App Widget functionality. Base class.
@@ -64,9 +67,11 @@ abstract class AppWidgetBase extends AppWidgetProvider {
      */
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
-        }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            for (int appWidgetId : appWidgetIds) {
+                updateAppWidget(context, appWidgetManager, appWidgetId);
+            }
+        });
     }
 
 
@@ -171,9 +176,14 @@ abstract class AppWidgetBase extends AppWidgetProvider {
             Calendar cal = Calendar.getInstance();
             cal.clear();
             cal.setTimeInMillis(Math.round(millisEquivalent));
-            Toast.makeText(context, context.getString(R.string.toast_currentUsage,
-                    SimpleDateFormat.getDateTimeInstance().format(cal.getTime()),
-                    millisToInterval(cal.getTimeInMillis() - currentMillis)), Toast.LENGTH_LONG).show();
+
+            // this trick allows to display a toast when not on the main thread
+            // from https://stackoverflow.com/a/34213472
+            new Handler(Looper.getMainLooper()).post(() ->
+                    Toast.makeText(context, context.getString(R.string.toast_currentUsage,
+                            SimpleDateFormat.getDateTimeInstance().format(cal.getTime()),
+                            millisToInterval(cal.getTimeInMillis() - currentMillis)), Toast.LENGTH_LONG).show()
+            );
         }
 
         // invert data
