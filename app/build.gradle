@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'com.trianguloy.continuousDataUsage'
-    compileSdk 34
+    compileSdk 36
     defaultConfig {
         applicationId "com.trianguloy.continuousDataUsage"
         minSdkVersion 29
-        targetSdkVersion 34
+        targetSdkVersion 36
         versionCode 28
         versionName "4.1"
     }
