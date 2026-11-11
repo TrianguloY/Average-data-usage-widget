@@ -22,6 +22,7 @@ import com.trianguloy.continuousDataUsage.common.Tweaks;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -67,11 +68,19 @@ abstract class AppWidgetBase extends AppWidgetProvider {
      */
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        if(new Preferences(context).getTweak(Tweaks.Tweak.noBackgroundProcessing)){
             for (int appWidgetId : appWidgetIds) {
                 updateAppWidget(context, appWidgetManager, appWidgetId);
             }
-        });
+        }else {
+            try (var executor = Executors.newSingleThreadExecutor()) {
+                executor.execute(() -> {
+                    for (int appWidgetId : appWidgetIds) {
+                        updateAppWidget(context, appWidgetManager, appWidgetId);
+                    }
+                });
+            }
+        }
     }
 
 

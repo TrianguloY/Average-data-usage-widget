@@ -37,6 +37,7 @@ public class Tweaks implements DialogInterface.OnMultiChoiceClickListener {
         capNoWarp,
         androidUsageButton,
         wifiUsage,
+        noBackgroundProcessing,
     }
 
     // ------------------- Tweaks -------------------
