@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.trianguloy.continuousDataUsage.activities.SettingsActivity"
     tools:menu="@menu/menu_history">
@@ -328,10 +329,10 @@
 
         <Button
             android:id="@+id/stt_btn_tweaks"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
-            style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:text="@string/btn_tweaks" />
 
         <Space

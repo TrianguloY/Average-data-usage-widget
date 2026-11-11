@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.trianguloy.continuousDataUsage.activities.Main"
     tools:menu="@menu/menu_history">
@@ -21,23 +22,23 @@
 
             <Button
                 android:id="@+id/m_btn_history"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableStart="@drawable/ic_history"
                 android:drawableTint="#AAAAAA"
                 android:onClick="onClick"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless"
                 android:text="@string/h_title" />
 
             <Button
                 android:id="@+id/m_btn_settings"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableStart="@android:drawable/ic_menu_manage"
                 android:onClick="onClick"
-                style="@android:style/Widget.DeviceDefault.Button.Borderless"
                 android:text="@string/s_title" />
         </LinearLayout>
 
