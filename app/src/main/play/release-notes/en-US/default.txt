@@ -1,3 +1,7 @@
+V 4.2.1
+- New: Tweak: Disable new background processing (try this if widgets stop updating)
+- Fix: Main screen buttons and other elements at the top drawn under the top bar
+
 V 4.2
 - New: Tweak: display Wi-Fi instead of Mobile data.
 - Improve: widget updating logic (may fix widget-not-updating bug)
